@@ -1,0 +1,58 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP +3.3V
+D Power symbol creates a global label with name "+3.3V"
+K power-flag
+$ENDCMP
+#
+$CMP +3V3
+D Power symbol creates a global label with name "+3V3"
+K power-flag
+$ENDCMP
+#
+$CMP 3V3A
+D Power symbol creates a global label with name "+3V3"
+K power-flag
+$ENDCMP
+#
+$CMP 3V3D
+D Power symbol creates a global label with name "+3V3"
+K power-flag
+$ENDCMP
+#
+$CMP GND
+D Power symbol creates a global label with name "GNDD" , digital ground
+K power-flag
+$ENDCMP
+#
+$CMP LED
+D Light emitting diode
+K LED diode
+F ~
+$ENDCMP
+#
+$CMP MountingHole
+D Mounting Hole without connection
+K mounting hole
+F ~
+$ENDCMP
+#
+$CMP Stepper_Motor_bipolar
+D 4-wire bipolar stepper motor
+K bipolar stepper motor
+F http://www.infineon.com/dgdl/Application-Note-TLE8110EE_driving_UniPolarStepperMotor_V1.1.pdf?fileId=db3a30431be39b97011be5d0aa0a00b0
+$ENDCMP
+#
+$CMP TestPoint
+D test point
+K test point tp
+F ~
+$ENDCMP
+#
+$CMP blackpill_STM32F401CEUx
+D ARM Cortex-M4 MCU, 512KB flash, 96KB RAM, 84MHz, 1.7-3.6V, 36 GPIO, UFQFPN-48
+K ARM Cortex-M4 STM32F4 STM32F401
+F http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00102166.pdf
+$ENDCMP
+#
+#End Doc Library

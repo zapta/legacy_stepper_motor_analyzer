@@ -1,0 +1,11 @@
+
+
+---------------------------------
+ 
+
+Future versions
+
+1. Make the blackpill's user key available to whatever we want.
+
+2. Can we achieve a faster refresh rate using SPI, dual buffer, and DMA?
+

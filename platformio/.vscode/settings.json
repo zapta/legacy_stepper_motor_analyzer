@@ -1,0 +1,34 @@
+{
+    "files.associations": {
+        "*.tcc": "cpp",
+        "cstdio": "cpp",
+        "atomic": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "fstream": "cpp",
+        "limits": "cpp",
+        "sstream": "cpp",
+        "system_error": "cpp",
+        "random": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "streambuf": "cpp"
+    },
+    "cSpell.words": [
+        "Cplt",
+        "EEPROM",
+        "EESATR",
+        "LVGL",
+        "PORTA",
+        "PORTB",
+        "TFT's",
+        "TRIGER",
+        "bssr",
+        "hadc",
+        "milliamps",
+        "n'th",
+        "println"
+    ]
+}
