@@ -375,6 +375,12 @@ TFT connector | 2x20 pins, 0.1" pitch, female header.
 Resistors, capacitors, LEDS | Per the schematic diagram | Typical package is SMD 0603. 
 PCB | 97 x 66 mm, 2 layers, standard design rules, gerber files are available on github | JLCPCB, PCBWay, etc, or shop at https://pcbshopper.com/
 
+
+A compatible TFT/Touch can be ordered at https://www.buydisplay.com/lcd-3-5-inch-320x480-tft-display-module-optl-touch-screen-w-breakout-board. Make sure to specify these options:
+
+![](./www/tft_order_options.png)
+
+
 **Instructions:** Build the PCB, use DFU or SWD protocols to program the released binary into the Blackpill, plugin the TFT screen, power and use. See instructions below on how to flash the firmware release you can find on this github repository.
 
 ![](./www/board1.jpg)
@@ -392,6 +398,13 @@ Flashing the Analyzer with firmware can be done in a few ways. For software deve
 
 ## How to modify the firmware?
 The source code of the Analyzer is available on this github repository. It is a STM32 C++ Platformio project that uses the Arduino framework. The user interface is based on the LVGL library and the project includes its own port to support TFT/Touch used.  Knowledge of C++ and Platformio is required and is outside the scope of this document.
+
+## Mechanical
+We provide here a [3D model of a simple open frame carrier](./3d/base.stl). This design does not requires attaching the analyzer and the TFT board with screws or spacers and guarantees proper separation on the loose end. If you have an interesting design which you would like to share, please post in a model sharing site such as cults3d, thingiverse or grabcad and we will link it here.
+
+![](./3d/base.png)
+
+
 
 ## Ideas for improvements
 The Analyzer is provided as a fully functional reference design and changes and the developers encourage improvement/modifications of the hardware and/or firmware are encouraged. This can include new features, new measurements and pages, extending the design to support 2 or 3 steppers at once to track the x/y/z of a 3D printer, reducing the hardware cost using less expensive screen TFT, or even eliminating the screen altogether and using the Analyzer as a dongle tethered to a computer via the existing USB/Serial link.
