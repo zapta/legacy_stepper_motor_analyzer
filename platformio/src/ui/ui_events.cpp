@@ -20,7 +20,7 @@ bool consume_event(UiEventId* ui_event_id) {
 
 void clear_pending_events() { pending_event = false; }
 
-static void commong_event_event(lv_obj_t* obj, lv_event_t event,
+static void common_event_handler(lv_obj_t* obj, lv_event_t event,
                                 UiEventId ui_event_id) {
   if (event == LV_EVENT_CLICKED) {
     // Overwrite pending event, if exist.
@@ -31,47 +31,47 @@ static void commong_event_event(lv_obj_t* obj, lv_event_t event,
 }
 
 static void event_handler_reset(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_RESET);
+  common_event_handler(obj, event, UI_EVENT_RESET);
 }
 
 static void event_handler_prev_page(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_PREV_PAGE);
+  common_event_handler(obj, event, UI_EVENT_PREV_PAGE);
 }
 
 static void event_handler_home_page(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_HOME_PAGE);
+  common_event_handler(obj, event, UI_EVENT_HOME_PAGE);
 }
 
 static void event_handler_next_page(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_NEXT_PAGE);
+  common_event_handler(obj, event, UI_EVENT_NEXT_PAGE);
 }
 
 static void event_handler_settings(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_SETTINGS);
+  common_event_handler(obj, event, UI_EVENT_SETTINGS);
 }
 
 static void event_handler_capture(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_CAPTURE);
+  common_event_handler(obj, event, UI_EVENT_CAPTURE);
 }
 
 static void event_handler_zero_calibration(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_ZERO_CALIBRATION);
+  common_event_handler(obj, event, UI_EVENT_ZERO_CALIBRATION);
 }
 
 static void event_handler_direction(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_DIRECTION);
+  common_event_handler(obj, event, UI_EVENT_DIRECTION);
 }
 
 static void event_handler_scale(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_SCALE);
+  common_event_handler(obj, event, UI_EVENT_SCALE);
 }
 
 static void event_handler_debug(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_DEBUG);
+  common_event_handler(obj, event, UI_EVENT_DEBUG);
 }
 
 static void event_handler_screenshot(lv_obj_t* obj, lv_event_t event) {
-  commong_event_event(obj, event, UI_EVENT_SCREENSHOT);
+  common_event_handler(obj, event, UI_EVENT_SCREENSHOT);
 }
 
 // TODO: can we eliminate the need for individual callback functions
