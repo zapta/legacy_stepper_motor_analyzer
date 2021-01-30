@@ -1,5 +1,8 @@
 # Simple Stepper Motor Analyzer
 
+&nbsp;
+
+https://github.com/zapta/simple_stepper_motor_analyzer
 
 &nbsp;
 
@@ -373,6 +376,12 @@ Resistors, capacitors, LEDS | Per the schematic diagram | Typical package is SMD
 PCB | 97 x 66 mm, 2 layers, standard design rules, gerber files are available on github | JLCPCB, PCBWay, etc, or shop at https://pcbshopper.com/
 
 **Instructions:** Build the PCB, use DFU or SWD protocols to program the released binary into the Blackpill, plugin the TFT screen, power and use. See instructions below on how to flash the firmware release you can find on this github repository.
+
+![](./www/board1.jpg)
+
+&nbsp;
+
+![](./www/board2.jpg)
 
 ## Flashing a new firmware
 Flashing the Analyzer with firmware can be done in a few ways. For software developers we recommend using StLink V2 and SWD which are well supported by the platformio IDE and enable debugging ans single stepping. A simpler approach that is recommended for end users is to use the builtin DFU protocol of  STM32 processor such as the one we use here. Adafruit has a [good description of the process](https://learn.adafruit.com/adafruit-stm32f405-feather-express/dfu-bootloader-details) with the only difference that to enable the DFU bootloader mode you will need to perform the following sequence rather then the one specified by Adafruit:
