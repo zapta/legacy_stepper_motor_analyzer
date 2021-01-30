@@ -1,11 +1,15 @@
 
 
+* Try to eliminate the external EEPROM by storing the settings in internal flash per discussion at https://community.platformio.org/t/how-to-reserve-a-page-of-flash-memory-stm32-arduino/18664
+
+
 ---------------------------------
  
 
 Future versions
 
-1. Make the blackpill's user key available to whatever we want.
+* Make the blackpill's user key available to whatever we want.
 
-2. Can we achieve a faster refresh rate using SPI, dual buffer, and DMA?
+* Explore if we can get good refresh rate and user experience with a 320x240 TFT / Resistive touch (cheap) and dual buffering SPI + DMA.
 
+* Can we have a RPI pico base version?
