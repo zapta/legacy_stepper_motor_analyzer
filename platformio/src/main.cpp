@@ -95,7 +95,7 @@ void loop() {
   screen_manager::loop();
 
   // Heartbeat.
-  if (millis() % 3000 < 25) {
+  if (millis() % 3000 < 50) {
     LED1_ON;
   } else {
     LED1_OFF;

@@ -101,8 +101,6 @@ static void capture_buffer(const lv_area_t* area, lv_color_t* bfr) {
 // color is uint16_t RGB565.
 static void my_flush_cb(lv_disp_drv_t* disp_drv, const lv_area_t* area,
                         lv_color_t* color_p) {
-  LED3_ON;
-
   if (screen_capture_enabled) {
     capture_buffer(area, color_p);
   }
@@ -114,7 +112,6 @@ static void my_flush_cb(lv_disp_drv_t* disp_drv, const lv_area_t* area,
 
   // IMPORTANT!!! Inform the graphics library that flushing was done.
   lv_disp_flush_ready(disp_drv);
-  LED3_OFF;
 }
 
 void static init_display_driver() {
