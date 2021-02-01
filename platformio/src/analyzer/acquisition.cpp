@@ -15,7 +15,7 @@
 
 namespace acquisition {
 
-// Updated by sample_state(). This is the frozen copy of the 
+// Updated by sample_state(). This is the frozen copy of the
 // state the UI can use.
 static State sampled_state;
 
@@ -28,25 +28,26 @@ constexpr float kAmpsPerCount = 1 / kCountsPerAmp;
 
 constexpr float kMilliampsPerCount = 1000 / kCountsPerAmp;
 
-// Energized/non-energized histeresis limits in ADC 
+// Energized/non-energized histeresis limits in ADC
 // counts.
 //
-// TODO: specify limits in milliamps and convert to 
-// ADC ticks.
+// TODO: specify here what the limits are as a percentage
+// of full current scale.
+//
 constexpr uint16_t kNonEnergizedThresholdCounts = 50;
 constexpr uint16_t kEnergizedThresholdCounts = 150;
 
 // Hysteresis for determining quadrant transitions. In
 // milliamps and in ADC counts.
-constexpr int kQuadrantHisteresisMilliamps = 100;
-constexpr int kQuadrantHysteresisCounts =
-    (kQuadrantHisteresisMilliamps * kCountsPerAmp) / 1000;
+// constexpr int kQuadrantHisteresisMilliamps = 100;
+// constexpr int kQuadrantHysteresisCounts =
+//     (kQuadrantHisteresisMilliamps * kCountsPerAmp) / 1000;
 
 // Precompute signed histeresize for transition from the
 // current quadrant q = [0, 2, 3, 3].
-static constexpr int quadrant_v1_histeresis[] = {
-    (kQuadrantHysteresisCounts / 2), (-kQuadrantHysteresisCounts / 2),
-    (kQuadrantHysteresisCounts / 2), (-kQuadrantHysteresisCounts / 2)};
+// static constexpr int quadrant_v1_histeresis[] = {
+//     (kQuadrantHysteresisCounts / 2), (-kQuadrantHysteresisCounts / 2),
+//     (kQuadrantHysteresisCounts / 2), (-kQuadrantHysteresisCounts / 2)};
 
 // Allowed range for adc zero current offset setting.
 // This range is wider than needed and actual offsets
@@ -80,9 +81,9 @@ struct IsrData {
   // Time out for waiting for trigger in divided ADC ticks.
   uint32_t capture_pre_trigger_items_left = 0;
   // Factor to divide ADC ticks. Only every n'th sample is captured.
-  uint16_t capture_divider = 1;      
-  // Up counter for capturing only every n'th samples.  
-  uint16_t capture_divider_counter = 0;  
+  uint16_t capture_divider = 1;
+  // Up counter for capturing only every n'th samples.
+  uint16_t capture_divider_counter = 0;
   // Capturing state.
   CaptureState capture_state = CAPTURE_IDLE;
   // The capture buffer itself. Updated by ISR when state != CAPTURE_IDLE
@@ -159,8 +160,8 @@ float adc_value_to_amps(int adc_value) {
 void calibrate_zeros() {
   __disable_irq();
   {
-    isr_data.settings.offset1 += isr_data.state.display_v1;
-    isr_data.settings.offset2 += isr_data.state.display_v2;
+    isr_data.settings.offset1 += isr_data.state.v1;
+    isr_data.settings.offset2 += isr_data.state.v2;
   }
   __enable_irq();
 }
@@ -184,11 +185,10 @@ void dump_sampled_state() {
   Serial.printf(
       "[%lu][er:%lu] [%5d, %5d] [en:%d %lu] s:%d/%d  steps:%d max_steps:%d\n",
       sampled_state.tick_count - last_tick_count,
-      sampled_state.quadrature_errors, sampled_state.display_v1,
-      sampled_state.display_v2, sampled_state.is_energized,
-      sampled_state.non_energized_count, sampled_state.quadrant,
-      sampled_state.last_step_direction, sampled_state.full_steps,
-      sampled_state.max_full_steps);
+      sampled_state.quadrature_errors, sampled_state.v1, sampled_state.v2,
+      sampled_state.is_energized, sampled_state.non_energized_count,
+      sampled_state.quadrant, sampled_state.last_step_direction,
+      sampled_state.full_steps, sampled_state.max_full_steps);
 
   last_tick_count = sampled_state.tick_count;
 
@@ -231,7 +231,8 @@ void dump_capture(const CaptureBuffer& buffer) {
 // Maybe add step's information to the histogram.
 // Called from isr on step transition.
 inline void isr_add_step_to_histogram(int quadrant, Direction entry_direction,
-                                      Direction exit_direction, uint32_t ticks_in_step,
+                                      Direction exit_direction,
+                                      uint32_t ticks_in_step,
                                       uint32_t max_current_in_step) {
   // Ignoring this step if not entering and exiting this step in same forward or
   // backward direction.
@@ -239,7 +240,8 @@ inline void isr_add_step_to_histogram(int quadrant, Direction entry_direction,
       entry_direction == UNKNOWN_DIRECTION) {
     return;
   }
-  uint32_t steps_per_sec = TicksPerSecond / ticks_in_step;  // speed in steps per second
+  uint32_t steps_per_sec =
+      TicksPerSecond / ticks_in_step;  // speed in steps per second
   if (steps_per_sec < 10) {
     return;  // ignore very slow steps as they dominate the time.
   }
@@ -282,8 +284,8 @@ static filters::Adc12BitsLowPassFilter<700> signal1_filter;
 static filters::Adc12BitsLowPassFilter<400> signal2_filter;
 
 // Slow filter, for display purposes.
-static filters::Adc12BitsLowPassFilter<1023> display1_filter;
-static filters::Adc12BitsLowPassFilter<1023> display2_filter;
+// static filters::Adc12BitsLowPassFilter<1023> display1_filter;
+// static filters::Adc12BitsLowPassFilter<1023> display2_filter;
 
 // This function performs the bulk of the IRQ processing. It accepts
 // one pair of ADC1, ADC2 readings, analyzes it, and updates the
@@ -298,10 +300,10 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
       (uint16_t)signal2_filter.update(raw_v2) - isr_data.settings.offset2;
 
   // Slower filtering for display purposes.
-  isr_data.state.display_v1 =
-      (uint16_t)display1_filter.update(raw_v1) - isr_data.settings.offset1;
-  isr_data.state.display_v2 =
-      (uint16_t)display2_filter.update(raw_v2) - isr_data.settings.offset2;
+  isr_data.state.v1 = v1;
+  //   (uint16_t)display1_filter.update(raw_v1) - isr_data.settings.offset1;
+  isr_data.state.v2 = v2;
+  // (uint16_t)display2_filter.update(raw_v2) - isr_data.settings.offset2;
 
   // Handle signal capturing.
   // Release: 220ns, Debug: 1100ns.  (TODO: update timing for current code)
@@ -365,8 +367,9 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
   const bool old_is_energized = isr_data.state.is_energized;
   const uint16_t total_current = abs(v1) + abs(v2);
   // Using histeresis.
-  const uint16_t energized_threshold =
-      old_is_energized ? kNonEnergizedThresholdCounts : kEnergizedThresholdCounts;
+  const uint16_t energized_threshold = old_is_energized
+                                           ? kNonEnergizedThresholdCounts
+                                           : kEnergizedThresholdCounts;
   const bool new_is_energized = total_current > energized_threshold;
   isr_data.state.is_energized = new_is_energized;
 
@@ -384,62 +387,72 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
     return;
   }
 
-  // Here when energized. Decode quadrant. See quadrants_plot.png
-  // in this repository for more details.
-  const int old_quadrant = isr_data.state.quadrant;  // old quadrant [0, 3]
-  const int v1_hysteresis = quadrant_v1_histeresis[old_quadrant];
-  // We now go through a decision tree to collect the new quadrant and
-  // max coil current. Optimized for speed. See quadrants_plot.png
+  // Here when energized. Decode quadrant. 
+  // We now go through a decision tree to collect the new quadrant, sector
+  // and max coil current. Optimized for speed. See quadrants_plot.png
   // for the individual cases.
-  int new_quadrant;      // set below to [0, 3]
+  uint8_t new_quadrant;  // set below to [0, 3]
+  uint8_t new_sector;    // set below to [0, 7]
   uint32_t max_current;  // max coil current
-  if (v1 >= 0) {
-    if (v2 >= 0) {
-      if ((v1 + v1_hysteresis) > v2) {
-        // Case 1: v1 > 0, V2 > 0.  |v1| > |v2|
-        new_quadrant = 0;
+  if (v2 >= 0) {
+    if (v1 >= 0) {
+      // Quadrant 0: v1 > 0, V2 > 0.
+      new_quadrant = 0;
+      if (v1 > v2) {
+        // Sector 0: v1 > 0, V2 > 0.  |v1| > |v2|
+        new_sector = 0;
         max_current = v1;
       } else {
-        // Case 2: v1 > 0, V2 > 0.  |v2| > |v1|
-        new_quadrant = 1;
+        // Sector 1: v1 > 0, V2 > 0.  |v1| < |v2|
+        new_sector = 1;
         max_current = v2;
       }
     } else {
-      if ((v1 + v1_hysteresis) > -v2) {
-        // Case 3: v1 > 0, V2 < 0.  |v1| > |v2|
-        new_quadrant = 0;
-        max_current = v1;
+      // Quadrant 1: v1 < 0, V2 > 0
+      new_quadrant = 1;
+      if (-v1 < v2) {
+        // Sector 2: v1 < 0, V2 > 0.  |v1| < |v2|
+        new_sector = 2;
+        max_current = v2;
       } else {
-        // Case 4: v1 > 0, V2 < 0.  |v2| > |v1|
-        new_quadrant = 3;
-        max_current = -v2;
+        // Sector 3: v1 < 0, V2 > 0.  |v1| > |v2|
+        new_sector = 3;
+        max_current = -v1;
       }
     }
   } else {
-    if (v2 >= 0) {
-      if ((-v1 + v1_hysteresis) > v2) {
-        // Case 5: v1 < 0, V2 > 0.  |v1| > |v2|
-        new_quadrant = 2;
+    if (v1 < 0) {
+      // Quadrant 2:  v1 < 0, V2 < 0
+      new_quadrant = 2;
+      if (-v1 > -v2) {
+        // Sector 4: v1 < 0, V2 < 0.  |v1| > |v2|
+        new_sector = 4;
         max_current = -v1;
       } else {
-        // Case 6: v1 < 0, V2 > 0.  |v2| > |v1|
-        new_quadrant = 1;
-        max_current = v2;
+        // Sector 5: v1 < 0, V2 < 0.  |v1| < |v2|
+        new_sector = 5;
+        max_current = -v2;
       }
     } else {
-      if ((-v1 + v1_hysteresis) > -v2) {
-        // Case 7: v1 < 0, V2 < 0.  |v1| > |v2|
-        new_quadrant = 2;
-        max_current = -v1;
-      } else {
-        new_quadrant = 3;
+      // Quadrant 3 v1 > 0, V2 < 0.
+      new_quadrant = 3;
+      if (v1 < -v2) {
+        // Sector 6: v1 > 1, V2 < 0.  |v1| < |v2|
+        new_sector = 6;
         max_current = -v2;
+      } else {
+        // Sector 7: v1 > 0, V2 < 0.  |v1| > |v2|
+        new_sector = 7;
+        max_current = v1;
       }
     }
   }
+
   isr_data.state.quadrant = new_quadrant;
+  isr_data.state.sector = new_sector;
 
   // Track quadrant transitions and steps.
+  const int8_t old_quadrant = isr_data.state.quadrant;  // old quadrant [0, 3]
   if (!old_is_energized) {
     // Case 1: motor just became energized. Direction is still not known.
     isr_data.state.last_step_direction = UNKNOWN_DIRECTION;

@@ -79,9 +79,9 @@ void HomeScreen::loop() {
   // Sample data and update screen.
   const acquisition::State* state = acquisition::sample_state();
 
-  ch_a_field_.set_text_float(acquisition::adc_value_to_amps(state->display_v1),
+  ch_a_field_.set_text_float(acquisition::adc_value_to_amps(state->v1),
                              2);
-  ch_b_field_.set_text_float(acquisition::adc_value_to_amps(state->display_v2),
+  ch_b_field_.set_text_float(acquisition::adc_value_to_amps(state->v2),
                              2);
 
   errors_field_.set_text_uint(state->quadrature_errors);

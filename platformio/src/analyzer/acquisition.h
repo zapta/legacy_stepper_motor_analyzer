@@ -93,11 +93,12 @@ struct State {
  public:
   State()
       : tick_count(0),
-        display_v1(0),
-        display_v2(0),
+        v1(0),
+        v2(0),
         is_energized(false),
         non_energized_count(0),
         quadrant(0),
+        sector(0),
         full_steps(0),
         max_full_steps(0),
         max_retraction_steps(0),
@@ -111,18 +112,22 @@ struct State {
   // Number of ADC pair samples since last data reset. This is
   // also a proxy for the time passed.
   uint32_t tick_count;
-  // Slow filtered values of current v1, v2, in adc count units.
-  // Used for UI purposes.
-  int16_t display_v1;
-  int16_t display_v2;
+  // Signed current values in ADC count units.  When the stepper 
+  // is energized, these values together with the sector value 
+  // below can be used to compute the fractional step value.
+  int16_t v1;
+  int16_t v2;
   // True if the coils are energized. Determined by the sum
   // of the absolute values of a pair of current readings.
   bool is_energized;
   // Number of times coils were de-energized.
   uint32_t non_energized_count;
-  // The current quadrant in the range [0, 1, 2, 3]. Each quadrant
+  // The last quadrant in the range [0, 3]. Each quadrant
   // represents a full step. See quadrants_plot.png  for details.
   int8_t quadrant;
+  // The last sector in the range [0, 7]. Each sector
+  // represents a half step. See quadrants_plot.png  for details.
+  int8_t sector;
   // Total (forward - backward) full steps. This is a proxy
   // for the overall distance.
   int full_steps;
