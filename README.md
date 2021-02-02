@@ -11,6 +11,21 @@ https://github.com/zapta/simple_stepper_motor_analyzer
 
 &nbsp;
 
+## Highlights
+* Low cost and minimalist DYI hardware design.
+* Standalone. Doesn't require a computer to operate.
+* Analyzes the stepper motor signals in the actual system (e.g. a 3D printer).
+* Does not interfere with the operating equipment. Galvanically isolated current sensors.
+* Each to connect.
+* Intuitive color/touch user interfere.
+* Resolution of 0.01 of a full step.
+* Provides momentary readings, signal patterns, and statistical measurements.
+* Hardware and software are open sourced with a generous license.
+* Based on free tools (Kicad, platformio, LVGL, STM32Duino).
+* Can be easily customized (new featured, cost reduction, data link to a computer, etc).
+* Requires 5VDC, 200ma and a micro USB  cable.
+
+
 ## Overview
 Diagnosing the operation of stepper motor in 3D printers and CNC machines used to require stepper motor analyzers that costs thousands of dollar. Not anymore! The Simple Stepper Analyzer ('Analyzer' in short) brings these capabilities to every maker for a tiny fraction of the price and with a minimalist DIY electronic design that leaves the heavy lifting to the firmware.
 
@@ -65,7 +80,10 @@ Field | Description
  ERRORS | The number of phase errors detected so far. Phase errors happens when the current patterns are so distorted that a forward/backward movement cannot be determined.
  POWER | Indicates if the stepper motor is currently energized. This is determined by the sum of currents in they two coils.
  IDLES | The number of times that stepper motor change status from energized to non energized.
- STEPS | The distance the stepper moved so far. Each full step forward increments this value by one and each full step backward decrements it by one.
+ STEPS | The distance the stepper moved so far. Each full step forward increments this value by one and each full step backward decrements it by one. When the stepper motor is energized, the display also shows fractional steps in resolution of 1/100th of a full step.
+
+
+HINT: The fractional step value cannot be reset because it is derived from the momentary currents in the two coils. Only the stepper motor driver can reset the fraction by positioning the stepper motor on an exact full step.
 
 HINT: To swap forward/backward directions of the Analyzer use the Settings page. This does not affect the stepper motor itself.
 
@@ -231,7 +249,7 @@ This page shows an histogram with the the distribution of distance by stepper sp
 
 Data | Description
 :------------ | :-------------
-Distance&nbsp;Histogram |  The horizontal axis indicates speed in full steps per second units. The height of each bar indicate the distance or numberr of steps in that speed range, with the length of the longest bar normalized to 100%.
+Distance&nbsp;Histogram |  The horizontal axis indicates speed in full steps per second units. The height of each bar indicate the distance or number of steps in that speed range, with the length of the longest bar normalized to 100%.
 
 &nbsp;
 #### Page Actions
@@ -293,7 +311,7 @@ The screenshot below is from a poor system where high speed results in distorted
 
 &nbsp;
 
-**GENERAL INFORMATION:** Each cycle of the stepper current pattern represent 4 full steps. The centers of those steps are at the points any of the coils is at its maximal or minimal current as shown in the diagram below.
+**GENERAL INFORMATION:** Each cycle of the stepper current pattern represent 4 full steps. The centers of those steps are at on the four vertical dotted lines where the currents of the two coils are identical, in the same or in  opposite polarities. The transitions between the steps are on the 4 vertical solid lines where one of the coils is at zero current. This cycle of 4 full steps is sometimes referred to as a single 'electric rotation'. The analyzer computes the exact phase on this cycle using the standard trigonometric function atan2(current1, current2) which can also be calculated manually from the current readings in the Home page.
 
 ![](./www/quadrants_plot.png)
 
@@ -341,6 +359,7 @@ Sampling rate | 100Khz per channel.
 Sampling resolution | 12bits
 Current accuracy | estimated at +/- 1%
 Max speed | Software dependent. Currently 2K full steps/sec.
+Step resolution | 1/100th of a full step.
 Partial steps measurement | Software dependent. Not implemented.
 Settings storage | On board EEPROM chip.
 GUI framework | LVGL library. R3G3B2 color depth.

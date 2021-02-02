@@ -98,7 +98,6 @@ struct State {
         is_energized(false),
         non_energized_count(0),
         quadrant(0),
-        sector(0),
         full_steps(0),
         max_full_steps(0),
         max_retraction_steps(0),
@@ -113,7 +112,7 @@ struct State {
   // also a proxy for the time passed.
   uint32_t tick_count;
   // Signed current values in ADC count units.  When the stepper 
-  // is energized, these values together with the sector value 
+  // is energized, these values together with the quadrant value 
   // below can be used to compute the fractional step value.
   int16_t v1;
   int16_t v2;
@@ -125,9 +124,6 @@ struct State {
   // The last quadrant in the range [0, 3]. Each quadrant
   // represents a full step. See quadrants_plot.png  for details.
   int8_t quadrant;
-  // The last sector in the range [0, 7]. Each sector
-  // represents a half step. See quadrants_plot.png  for details.
-  int8_t sector;
   // Total (forward - backward) full steps. This is a proxy
   // for the overall distance.
   int full_steps;
@@ -179,6 +175,9 @@ extern const State* sample_state();
 // Clears state data. This resets counters, min/max values, 
 // histograms, etc.
 extern void reset_state();
+
+// Return the steps value of the given state.
+extern double state_steps(const State& state);
 
 // Convert adc value to milliamps. 
 extern int adc_value_to_milliamps(int adc_value);

@@ -102,9 +102,9 @@ void loop() {
   }
 
   // Periodic report over USB/Serial.
-  if (elapsed_from_last_dump.elapsed_millis() > 5000) {
-    elapsed_from_last_dump.reset();
-    Serial.printf("\nMemory: %d\n", memory::free_memory());
-    lv_adapter::dump_stats();
-  }
+  // if (elapsed_from_last_dump.elapsed_millis() > 5000) {
+  //   elapsed_from_last_dump.reset();
+  //   Serial.printf("\nMemory: %d\n", memory::free_memory());
+  //   lv_adapter::dump_stats();
+  // }
 }

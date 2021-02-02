@@ -516,12 +516,15 @@ static void init_styles_if_needed() {
   }
 }
 
-void Label::set_text_float(float f, uint8_t precision) {
+void Label::set_text_float(double f, uint8_t precision) {
   dtostrf(f, 0, precision, temp_text_buffer);
   // TODO: find a conversion method that doesn't return negative
   // zeros. Until then, use the hack below.
-  const char* value_str =
-      strcmp("-0.00", temp_text_buffer) ? temp_text_buffer : "0.00";
+  const char* value_str = strncmp("-0.", temp_text_buffer, 3) == 0
+                              ? temp_text_buffer + 1
+                              : temp_text_buffer;
+  // This methods makes a copy of the string and doesn't maintain the input
+  // pointer.
   lv_label_set_text(lv_label, value_str);
 }
 

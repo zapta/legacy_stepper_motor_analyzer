@@ -50,7 +50,7 @@ struct Label {
 
   void set_text_uint(uint32_t u) { lv_label_set_text_fmt(lv_label, "%u", u); }
   void set_text(const char* s) { lv_label_set_text(lv_label, s); }
-  void set_text_float(float f, uint8_t precision);
+  void set_text_float(double f, uint8_t precision);
   void set_text_color(lv_color_t text_color) {
     lv_obj_set_style_local_text_color(lv_label, LV_LABEL_PART_MAIN,
                                       LV_STATE_DEFAULT, text_color);

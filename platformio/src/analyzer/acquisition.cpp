@@ -387,12 +387,11 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
     return;
   }
 
-  // Here when energized. Decode quadrant. 
+  // Here when energized. Decode quadrant.
   // We now go through a decision tree to collect the new quadrant, sector
   // and max coil current. Optimized for speed. See quadrants_plot.png
   // for the individual cases.
   uint8_t new_quadrant;  // set below to [0, 3]
-  uint8_t new_sector;    // set below to [0, 7]
   uint32_t max_current;  // max coil current
   if (v2 >= 0) {
     if (v1 >= 0) {
@@ -400,11 +399,9 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
       new_quadrant = 0;
       if (v1 > v2) {
         // Sector 0: v1 > 0, V2 > 0.  |v1| > |v2|
-        new_sector = 0;
         max_current = v1;
       } else {
         // Sector 1: v1 > 0, V2 > 0.  |v1| < |v2|
-        new_sector = 1;
         max_current = v2;
       }
     } else {
@@ -412,11 +409,9 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
       new_quadrant = 1;
       if (-v1 < v2) {
         // Sector 2: v1 < 0, V2 > 0.  |v1| < |v2|
-        new_sector = 2;
         max_current = v2;
       } else {
         // Sector 3: v1 < 0, V2 > 0.  |v1| > |v2|
-        new_sector = 3;
         max_current = -v1;
       }
     }
@@ -426,11 +421,9 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
       new_quadrant = 2;
       if (-v1 > -v2) {
         // Sector 4: v1 < 0, V2 < 0.  |v1| > |v2|
-        new_sector = 4;
         max_current = -v1;
       } else {
         // Sector 5: v1 < 0, V2 < 0.  |v1| < |v2|
-        new_sector = 5;
         max_current = -v2;
       }
     } else {
@@ -438,21 +431,18 @@ void isr_handle_one_sample(const uint16_t raw_v1, const uint16_t raw_v2) {
       new_quadrant = 3;
       if (v1 < -v2) {
         // Sector 6: v1 > 1, V2 < 0.  |v1| < |v2|
-        new_sector = 6;
         max_current = -v2;
       } else {
         // Sector 7: v1 > 0, V2 < 0.  |v1| > |v2|
-        new_sector = 7;
         max_current = v1;
       }
     }
   }
 
-  isr_data.state.quadrant = new_quadrant;
-  isr_data.state.sector = new_sector;
-
-  // Track quadrant transitions and steps.
   const int8_t old_quadrant = isr_data.state.quadrant;  // old quadrant [0, 3]
+  isr_data.state.quadrant = new_quadrant;
+
+  // Track quadrant transitions and update steps.
   if (!old_is_energized) {
     // Case 1: motor just became energized. Direction is still not known.
     isr_data.state.last_step_direction = UNKNOWN_DIRECTION;
@@ -525,6 +515,61 @@ void setup(const Settings& settings) {
   isr_data.settings = settings;
   isr_data.settings.offset1 = clip_offset(isr_data.settings.offset1);
   isr_data.settings.offset2 = clip_offset(isr_data.settings.offset2);
+}
+
+// This involves floating point operations and thus slow. Do not
+// call from the interrupt routine.
+double state_steps(const State& state) {
+  // If not energized, we can't compute fractional steps.
+  if (!state.is_energized) {
+    return state.full_steps;
+  }
+
+  // Compute fractional stept. We use the abs() to avoid
+  // the discontinuity near -180 degrees. It provides better safety with
+  // the non determinism of floating point values.
+  // Range is in [0, PI];
+  const double abs_radians = abs(atan2(state.v2, state.v1));
+
+  // Rel radians in [-PI/4, PI/4].
+  double rel_radians = 0;
+  switch (state.quadrant) {
+    case 0:
+      rel_radians = abs_radians - (PI / 4);
+      break;
+    case 1:
+      rel_radians = abs_radians - (3 * PI / 4);
+      break;
+    case 2:
+      rel_radians = (3 * PI / 4) - abs_radians;
+      break;
+    case 3:
+      rel_radians = (PI / 4) - abs_radians;
+      break;
+  }
+
+  // Fraction is in the range [-0.5, 0.5]
+  const double fraction = rel_radians * (2 / PI);
+
+  // NOTE: this is a little bit hacky since we don't know the direction
+  // flag setting at the time this sample was captured but should
+  // be good enough for now.
+  //
+  // TODO: record last direction flag value in the state.
+  const double result = isr_data.settings.reverse_direction
+                            ? state.full_steps - fraction
+                            : state.full_steps + fraction;
+
+  // Serial.printf("%d, %hu, (%hd, %hd), %d, ", state.full_steps,
+  // state.quadrant,
+  //               state.v1, state.v2, isr_data.settings.reverse_direction);
+  // Serial.print(abs_radians);
+  // Serial.print(", ");
+  // Serial.print(rel_radians);
+  // Serial.print(", ");
+  // Serial.println(fraction);
+
+  return result;
 }
 
 }  // namespace acquisition

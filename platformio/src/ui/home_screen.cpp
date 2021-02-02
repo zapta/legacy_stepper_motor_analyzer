@@ -4,7 +4,7 @@
 #include "misc/config_eeprom.h"
 #include "ui.h"
 
-static constexpr uint32_t kUpdateIntervalMillis = 200;
+static constexpr uint32_t kUpdateIntervalMillis = 500;
 
 HomeScreen::HomeScreen(){};
 
@@ -56,10 +56,11 @@ void HomeScreen::setup(uint8_t screen_num) {
                    LV_LABEL_ALIGN_RIGHT, LV_COLOR_SILVER, &idles_field_);
   y += dy;
 
-  ui::create_label(screen_, w1, x1, y, "STEPS", ui::kFontDataFields,
+  ui::create_label(screen_, w1 - 20, x1, y, "STEPS", ui::kFontDataFields,
                    LV_LABEL_ALIGN_LEFT, LV_COLOR_YELLOW, nullptr);
-  ui::create_label(screen_, w2, x2, y + 1, "", ui::kFontNumericDataFields,
-                   LV_LABEL_ALIGN_RIGHT, LV_COLOR_YELLOW, &steps_field_);
+  ui::create_label(screen_, w2 + 20, x2 - 20, y + 1, "",
+                   ui::kFontNumericDataFields, LV_LABEL_ALIGN_RIGHT,
+                   LV_COLOR_YELLOW, &steps_field_);
 };
 
 void HomeScreen::on_load() {
@@ -79,10 +80,8 @@ void HomeScreen::loop() {
   // Sample data and update screen.
   const acquisition::State* state = acquisition::sample_state();
 
-  ch_a_field_.set_text_float(acquisition::adc_value_to_amps(state->v1),
-                             2);
-  ch_b_field_.set_text_float(acquisition::adc_value_to_amps(state->v2),
-                             2);
+  ch_a_field_.set_text_float(acquisition::adc_value_to_amps(state->v1), 2);
+  ch_b_field_.set_text_float(acquisition::adc_value_to_amps(state->v2), 2);
 
   errors_field_.set_text_uint(state->quadrature_errors);
   errors_field_.set_text_color(state->quadrature_errors ? LV_COLOR_RED
@@ -93,5 +92,12 @@ void HomeScreen::loop() {
   idles_field_.set_text_uint(state->non_energized_count);
   idles_field_.set_text_color(state->non_energized_count ? LV_COLOR_RED
                                                          : LV_COLOR_SILVER);
-  steps_field_.set_text_int(state->full_steps);
+  if (state->is_energized) {
+    const double full_steps = acquisition::state_steps(*state);
+    steps_field_.set_text_float(full_steps, 2);
+  } else {
+    steps_field_.set_text_int(state->full_steps);
+  }
+
+  // Serial.printf("\n%d , %hu\n", state->full_steps, state->quadrant);
 }
