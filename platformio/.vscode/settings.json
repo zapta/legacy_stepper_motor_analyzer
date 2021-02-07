@@ -14,7 +14,9 @@
         "random": "cpp",
         "istream": "cpp",
         "ostream": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "memory": "cpp",
+        "optional": "cpp"
     },
     "cSpell.words": [
         "Cplt",

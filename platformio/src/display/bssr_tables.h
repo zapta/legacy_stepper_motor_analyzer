@@ -3,15 +3,9 @@
 
 #include <arduino.h>
 
-
 namespace bssr_tables {
 
-// Straight values.
-extern const uint32_t direct_bssr_table_port_a[];
-extern const uint32_t direct_bssr_table_port_b[];
-
-// With color8 to color16 mapping.
-extern const uint32_t color_bssr_table_port_a[];
-extern const uint32_t color_bssr_table_port_b[];
+extern const uint64_t direct_bssr_table[];
+extern const uint64_t color_bssr_table[];
 
 }  // namespace bssr_tables

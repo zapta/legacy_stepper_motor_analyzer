@@ -75,7 +75,7 @@ void HomeScreen::loop() {
   if (display_update_elapsed_.elapsed_millis() < kUpdateIntervalMillis) {
     return;
   }
-  display_update_elapsed_.reset();
+  display_update_elapsed_.advance(kUpdateIntervalMillis);
 
   // Sample data and update screen.
   const acquisition::State* state = acquisition::sample_state();
@@ -98,6 +98,4 @@ void HomeScreen::loop() {
   } else {
     steps_field_.set_text_int(state->full_steps);
   }
-
-  // Serial.printf("\n%d , %hu\n", state->full_steps, state->quadrant);
 }
