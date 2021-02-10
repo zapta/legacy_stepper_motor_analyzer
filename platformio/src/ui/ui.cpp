@@ -14,6 +14,11 @@ static constexpr bool kDebugBackgrounds = false;
 // dump over the USB/serial connection.
 static constexpr bool kEnableScreenshots = false;
 
+// For developers only. When enabled, clicking on a
+// screen's title field generates a Debug event for that
+// screen.
+static constexpr bool kEnableDebugEvents = false;
+
 static const lv_color_t kDebugBackgroundColor = LV_COLOR_MAKE(0x40, 0x40, 0x40);
 
 static void init_styles_if_needed();
@@ -48,6 +53,13 @@ struct HistogramStyles {
 };
 
 static HistogramStyles histogram_styles;
+
+struct PolarChartStyles {
+  lv_style_t bg;
+  lv_style_t line;
+};
+
+static PolarChartStyles polar_chart_styles;
 
 static char temp_text_buffer[20];
 
@@ -131,6 +143,32 @@ static void init_chart_styles() {
   lv_style_set_line_dash_gap(&chart_styles.series_bg, LV_STATE_DEFAULT, 0);
   lv_style_set_line_color(&chart_styles.series_bg, LV_STATE_DEFAULT,
                           LV_COLOR_MAKE(0x00, 0x40, 0x00));  // dark green
+}
+
+static void init_polar_chart_styles() {
+  // Background style
+  lv_style_init(&polar_chart_styles.bg);
+
+  common_lv_chart_bg_style((&polar_chart_styles.bg));
+
+  // Series style
+  lv_style_init(&polar_chart_styles.line);
+
+  // static lv_style_t style_line;
+  //           lv_style_init(&style_line);
+  lv_style_set_line_width(&polar_chart_styles.line, LV_STATE_DEFAULT, 2);
+  lv_style_set_line_color(&polar_chart_styles.line, LV_STATE_DEFAULT,
+                          LV_COLOR_RED);
+  // lv_style_set_line_rounded(&style_line, LV_STATE_DEFAULT, true);
+
+  // lv_style_set_size(&chart_styles.series, LV_STATE_DEFAULT, 0);
+  // lv_style_set_line_width(&chart_styles.series, LV_STATE_DEFAULT, 2);
+
+  // Series bg style
+  // lv_style_init(&chart_styles.series_bg);
+  // lv_style_set_line_dash_gap(&chart_styles.series_bg, LV_STATE_DEFAULT, 0);
+  // lv_style_set_line_color(&chart_styles.series_bg, LV_STATE_DEFAULT,
+  //                         LV_COLOR_MAKE(0x00, 0x40, 0x00));  // dark green
 }
 
 static void init_histogram_styles() {
@@ -428,6 +466,64 @@ void create_chart(const Screen& screen, uint16_t num_points, int num_series,
   chart->ser2.lv_series = lv_series2;
 }
 
+void create_polar_chart(const Screen& screen,
+                        const ChartAxisConfigs& axis_configs,
+                        PolarChart* polar_chart) {
+  init_styles_if_needed();
+
+  lv_obj_t* lv_chart = lv_chart_create(screen.lv_screen, NULL);
+  common_lv_chart_settings(lv_chart, axis_configs);
+
+  // Change to NONE?
+  lv_chart_set_type(lv_chart, LV_CHART_TYPE_LINE);
+
+  // lv_chart_set_update_mode(lv_chart, LV_CHART_UPDATE_MODE_SHIFT);
+  // TODO: set this to actual number of X pixels for better resolution.
+
+  // Change to 0?
+  lv_chart_set_point_count(lv_chart, 1);
+
+  // if (ui_event_id != ui_events::UI_EVENT_NONE) {
+  //   lv_obj_set_click(lv_chart, true);
+  //   const lv_event_cb_t event_cb = ui_events::get_event_handler(ui_event_id);
+  //   lv_obj_set_event_cb(lv_chart, event_cb);
+  // }
+
+  // // Add first data series.
+  // lv_chart_series_t* lv_series1 =
+  //     lv_chart_add_series(lv_chart, LV_COLOR_YELLOW);
+  // // Maybe add a second data series.
+  // lv_chart_series_t* lv_series2 =
+  //     (num_series >= 2) ? lv_chart_add_series(lv_chart, LV_COLOR_CYAN)
+  //                       : nullptr;
+
+  lv_obj_t* lv_line = lv_line_create(screen.lv_screen, NULL);
+
+  lv_obj_set_size(lv_line, 100, 100);
+  lv_obj_set_pos(lv_line, 50, 50);
+  // lv_line_set_points(line1, points, num_points);     /*Set the points*/
+  // lv_obj_add_style(line1, LV_LINE_PART_MAIN, &style_line);     /*Set the
+  // points*/
+
+  // Apply styles.
+  lv_obj_add_style(lv_chart, LV_CHART_PART_BG,
+                   &polar_chart_styles.bg);  // apply background style
+
+  lv_obj_add_style(lv_line, LV_CHART_PART_SERIES,
+                   &polar_chart_styles.line);  // Apply part series style.
+  // lv_obj_add_style(lv_chart, LV_CHART_PART_SERIES_BG,
+  //                 &chart_styles.series_bg);  // apply series background style
+
+  polar_chart->lv_chart = lv_chart;
+  polar_chart->lv_line = lv_line;
+
+  // chart->ser1.lv_chart = lv_chart;
+  // chart->ser1.lv_series = lv_series1;
+
+  // chart->ser2.lv_chart = lv_chart;
+  // chart->ser2.lv_series = lv_series2;
+}
+
 void create_histogram(const Screen& screen, uint16_t num_columns,
                       const ChartAxisConfigs& axis_configs,
                       Histogram* histogram) {
@@ -467,10 +563,11 @@ void create_page_title(const Screen& screen, const char* title, Label* label) {
   ui::create_label(screen, 220, 480 - 220 - 5, 0, title, kFontPageTitles,
                    LV_LABEL_ALIGN_RIGHT, LV_COLOR_GRAY, title_label_ptr);
 
-  if (kEnableScreenshots) {
+  if (kEnableScreenshots || kEnableDebugEvents) {
     lv_obj_set_click(title_label_ptr->lv_label, true);
-    const lv_event_cb_t event_cb =
-        ui_events::get_event_handler(ui_events::UI_EVENT_SCREENSHOT);
+    const lv_event_cb_t event_cb = ui_events::get_event_handler(
+        kEnableScreenshots ? ui_events::UI_EVENT_SCREENSHOT
+                           : ui_events::UI_EVENT_DEBUG);
     lv_obj_set_event_cb(title_label_ptr->lv_label, event_cb);
   }
 }
@@ -511,6 +608,7 @@ static void init_styles_if_needed() {
     init_gauge_styles();
     init_button_styles();
     init_chart_styles();
+    init_polar_chart_styles();
     init_histogram_styles();
     styles_initialized = true;
   }
