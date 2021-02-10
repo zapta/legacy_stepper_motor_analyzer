@@ -3,9 +3,9 @@
 #include "misc/elapsed.h"
 #include "screen_manager.h"
 
-class SignalCaptureScreen : public screen_manager::Screen {
+class OsciloscopeScreen : public screen_manager::Screen {
  public:
-  SignalCaptureScreen() {};
+  OsciloscopeScreen() {};
   virtual void setup(uint8_t screen_num) override;
   virtual void on_load() override;
   virtual void on_unload() override;

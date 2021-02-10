@@ -1,4 +1,4 @@
-#include "signal_capture_screen.h"
+#include "osciloscope_screen.h"
 
 #include "analyzer/acquisition.h"
 #include "ui.h"
@@ -19,7 +19,7 @@ static const ui::ChartAxisConfigs kAxisConfigsAlternative{
           .dividers = 4},
     .y = {.labels = "2.5A\n0\n-2.5A", .num_ticks = 3, .dividers = 1}};
 
-void SignalCaptureScreen::set_displayed_status(Status status) {
+void OsciloscopeScreen::set_displayed_status(Status status) {
   switch (status) {
     case RUNNING:
       status_label_.set_text("RUNNING");
@@ -39,13 +39,13 @@ void SignalCaptureScreen::set_displayed_status(Status status) {
 }
 
 // Should work even if capture is in progress.
-void SignalCaptureScreen::startCapture() {
+void OsciloscopeScreen::startCapture() {
   acquisition::start_capture(alternative_scale_ ? kCaptureDividerAlternative
                                                 : kCaptureDividerNormal);
   capture_in_progress_ = true;
 }
 
-void SignalCaptureScreen::setup(uint8_t screen_num) {
+void OsciloscopeScreen::setup(uint8_t screen_num) {
   ui::create_screen(&screen_);
   ui::create_page_elements(screen_, "CURRENT PATTERNS", screen_num, nullptr);
   ui::create_chart(screen_, acquisition::kCaptureBufferSize, 2,
@@ -60,43 +60,52 @@ void SignalCaptureScreen::setup(uint8_t screen_num) {
 
   lv_btn_set_checkable(run_button_.lv_button, true);
 
- 
-
   lv_obj_set_state(run_button_.lv_button, LV_STATE_CHECKED);
   set_displayed_status(RUNNING);
 };
 
-void SignalCaptureScreen::on_load() {
+void OsciloscopeScreen::on_load() {
   // Force display update on first loop.
   startCapture();
   chart_.ser1.clear();
   chart_.ser2.clear();
 };
 
-void SignalCaptureScreen::on_unload(){};
+void OsciloscopeScreen::on_unload(){};
 
-void SignalCaptureScreen::clear_chart() {
+void OsciloscopeScreen::clear_chart() {
   chart_.ser1.clear();
   chart_.ser2.clear();
   lv_obj_set_state(run_button_.lv_button, LV_STATE_CHECKED);
   lv_chart_refresh(chart_.lv_chart);
 }
 
-void SignalCaptureScreen::on_event(ui_events::UiEventId ui_event_id) {
+void OsciloscopeScreen::on_event(ui_events::UiEventId ui_event_id) {
   switch (ui_event_id) {
     case ui_events::UI_EVENT_RESET:
-       clear_chart();
-     
+      clear_chart();
       break;
 
-    case ui_events::UI_EVENT_SCALE:
+    case ui_events::UI_EVENT_SCALE: {
       alternative_scale_ = !alternative_scale_;
       // if (scale_alternative_) {
       chart_.set_scale(alternative_scale_ ? kAxisConfigsAlternative
                                           : kAxisConfigsNormal);
       clear_chart();
       Serial.printf("Scale event %d\n", alternative_scale_);
-      break;
+    } break;
+
+    case ui_events::UI_EVENT_DEBUG: {
+      // Dump graph to serial out.
+      Serial.println("\nGraphs:");
+      for (int i = 0; i < acquisition::kCaptureBufferSize; i++) {
+        const uint16_t v1 =
+            lv_chart_get_point_id(chart_.lv_chart, chart_.ser1.lv_series, i);
+        const uint16_t v2 =
+            lv_chart_get_point_id(chart_.lv_chart, chart_.ser2.lv_series, i);
+        Serial.printf("%3d,%6hd,%6hd\n", i, v1, v2);
+      }
+    } break;
 
     // This makes the compiler happy.
     default:
@@ -104,8 +113,7 @@ void SignalCaptureScreen::on_event(ui_events::UiEventId ui_event_id) {
   }
 }
 
-void SignalCaptureScreen::loop() {
- 
+void OsciloscopeScreen::loop() {
   // Update capture enabled if needed.
   const bool run_button_checked =
       lv_obj_get_state(run_button_.lv_button, LV_BTN_PART_MAIN) &

@@ -29,9 +29,7 @@ class Screen {
       ui::Screen screen_;
 
   private: 
-
 };
-
 
 enum ScreenId {
   SCREEN_NONE,
@@ -41,7 +39,7 @@ enum ScreenId {
   SCREEN_RETRACTION_CHART,
   SCREEN_TIME_HISTOGRAM,
   SCREEN_STEPS_HISTOGRAM,
-  SCREEN_SIGNAL_CAPTURE,
+  SCREEN_OSCILOSCOPE,
   SCREEN_CURRENT_HISTOGRAM,
   SCREEN_SETTINGS,
 };

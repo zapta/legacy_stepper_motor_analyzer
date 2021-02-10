@@ -657,7 +657,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Line (dependencies: -*/
-#define LV_USE_LINE     0
+#define LV_USE_LINE     1
 
 /*List (dependencies: lv_page, lv_btn, lv_label, (lv_img optionally for icons ))*/
 #define LV_USE_LIST     0
