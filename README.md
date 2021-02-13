@@ -264,7 +264,7 @@ Action | Description
 
 ## The Current by Speed Page
 
-This pages measures the ability of the stepper motor's controller to maintain peak current at high speeds.
+This page measures the ability of the stepper motor's controller to maintain peak current at high speeds.
 
 The screenshot below shows a healthy system where the peak current is virtually flat across the speed range.
 
@@ -297,7 +297,7 @@ Action | Description
 
 ## Coil Current Patterns Page
 
-This pages shows the current patterns in the two stepper coils.
+This page shows the current patterns in the two stepper coils.
 
 The screenshot below shows a healthy system where the signals are nice and clean and reaches the target peak current.
 
@@ -341,7 +341,75 @@ Tap the graph | This toggles the range of the horizontal axis.
 
 ---
 
-## Specification
+## Coil Current Phase Page
+
+This page draws the current patterns of the two coils as a [Lissajous curve](https://en.wikipedia.org/wiki/Lissajous_curve) which allows to examine visually distortions such as non sinusoidal current, phase distortion, and reduced amplitude.
+
+In an ideal system, the graph is a perfect smooth circle, that doesn't change its size when the stepper's speed changes. Patterns that significantly diverge from that indicates a sub optimal configuration and operation.
+
+Following picture shows a pattern from a well functioning system. The graph is round, reasonable smooth, and has sufficient size which indicates good current drive. 
+
+The horizontal axis indicates the coil 1 current and the vertical axis indicates coil 2 current. In this example, both span nicely between -2A to +2A.
+
+![](./www/phase_screen_good.png)
+
+&nbsp;
+
+The screenshot below is from a poor system where high speed results in distorted and insufficient current, resulting in loss of torque and a potential for skipped steps. The pattern is far from a clean circle and the shape has reduced size.
+
+![](./www/phase_screen_starved.png)
+
+&nbsp;
+
+The screenshot below shows a sub optimal operation where a a speed increase of the stepper results in small (less current and torque) and even more distorted curve.
+
+![](./www/phase_screen_accelerating.png)
+
+
+&nbsp;
+
+The screenshot below shows a well functioning system. The smaller size of the circle compare to the example above indicates that it operates on lower current.
+
+![](./www/phase_screen_good_small.png)
+
+
+&nbsp;
+
+The screenshot below show an operation of a stepper in full steps mode. The dimension of the pattern indicate good current feed, and the square  shape is the best a full step driver can deliver.
+
+![](./www/phase_screen_full_steps.png)
+
+
+&nbsp;
+
+The screenshot below show an operation of a stepper in half steps mode. The dimension of the pattern indicate good current feed, and the shape is somewhere between the square shape of full step mode and the round shape of micro stepping interpolation mode.
+
+![](./www/phase_screen_half_steps.png)
+
+
+&nbsp;
+
+#### Page Data
+
+Data | Description
+:------------ | :-------------
+Lissajous&nbsp;curve | A Lissajous curve drawn from the current pattern of coil 1 (x) and coil2(y). 
+
+**NOTE:** The graph is updated only when sufficient stepper motor movement is detected.
+
+&nbsp;
+#### Page Actions
+
+Action | Description
+:------------: | :-------------
+![](./www/trash.png) | Clear all data.
+
+
+&nbsp;
+
+---
+
+## Design Specification
 
 Item | Specification
 :------------ | :------------- 
