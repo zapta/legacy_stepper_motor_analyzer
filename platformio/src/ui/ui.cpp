@@ -497,30 +497,34 @@ void create_polar_chart(const Screen& screen,
   lv_obj_set_style_local_pad_left(lv_chart, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT,
                                   y_labels_enabled ? 40 : 20);
 
-  lv_obj_set_size(lv_chart, 280, 260);
+  // We adjusted this to have a square plot area.
+  lv_obj_set_size(lv_chart, 270, 260);
   // The x,y offsets here are fine tweaks of the chat position.
   lv_obj_align(lv_chart, NULL, LV_ALIGN_CENTER, 0, 0);
 
   set_chart_scale(lv_chart, axis_configs);
 
-  // // Change to NONE?
-  lv_chart_set_type(lv_chart, LV_CHART_TYPE_LINE);
+  // We don't use the chart to draw the graph. Instead we use
+  // a polyline (lv_line) that overlays it.
+  lv_chart_set_type(lv_chart, LV_CHART_TYPE_NONE);
 
   // Change to 0?
   lv_chart_set_point_count(lv_chart, 1);
 
-  // lv_obj_set_style_local_bg_color(lv_chart, LV_CHART_PART_BG,
-  // LV_STATE_DEFAULT, LV_COLOR_BLACK);
+  // Determine plot area dimensions.
+   lv_area_t a;
+   lv_chart_get_series_area(lv_chart, &a);
+   const lv_coord_t width = lv_area_get_width(&a);
+   const lv_coord_t height = lv_area_get_height(&a);
+   const lv_coord_t max_radius = min(width, height) / 2;
+   
 
-  //============== line
+  //============== polyline
 
   lv_obj_t* lv_line = lv_line_create(screen.lv_screen, NULL);
 
-  lv_obj_set_size(lv_line, 250, 250);
-  lv_obj_set_pos(lv_line, 0, 0);
-  // lv_line_set_points(line1, points, num_points);     /*Set the points*/
-  // lv_obj_add_style(line1, LV_LINE_PART_MAIN, &style_line);     /*Set the
-  // points*/
+  lv_obj_set_size(lv_line, 2*max_radius, 2*max_radius);
+  lv_obj_set_pos(lv_line, (a.x1 + a.x2)/2 - max_radius,  (a.y1 + a.y2) /2 - max_radius);
 
   // Apply styles.
   lv_obj_add_style(lv_chart, LV_CHART_PART_BG,
@@ -533,21 +537,9 @@ void create_polar_chart(const Screen& screen,
   lv_obj_add_style(lv_line, LV_LINE_PART_MAIN,
                    &polar_chart_styles.line);  // Apply part series style.
 
-  // lv_obj_add_style(lv_chart, LV_CHART_PART_SERIES_BG,
-  //                 &chart_styles.series_bg);  // apply series background style
-
-  // static lv_point_t points[] = {{50, 50}, {100, 100}};
-  //  lv_line_set_points(polar_chart_.lv_chart, points,
-  //                      2); /*Set the points*/
-
+  polar_chart->max_radius = max_radius;
   polar_chart->lv_chart = lv_chart;
   polar_chart->lv_line = lv_line;
-
-  // chart->ser1.lv_chart = lv_chart;
-  // chart->ser1.lv_series = lv_series1;
-
-  // chart->ser2.lv_chart = lv_chart;
-  // chart->ser2.lv_series = lv_series2;
 }
 
 void create_histogram(const Screen& screen, uint16_t num_columns,

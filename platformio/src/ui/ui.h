@@ -129,7 +129,10 @@ struct Histogram {
   lv_chart_series_t* lv_series = nullptr;
 };
 
+
+
 struct PolarChart {
+  lv_coord_t max_radius;
   lv_obj_t* lv_chart = nullptr;
   lv_obj_t* lv_line = nullptr;
 };
