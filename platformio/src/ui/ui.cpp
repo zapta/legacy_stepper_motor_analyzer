@@ -12,7 +12,7 @@ static constexpr bool kDebugBackgrounds = false;
 // For developers only. When enabled, clicking on a
 // screen's title field pauses the program and sends a screen
 // dump over the USB/serial connection.
-static constexpr bool kEnableScreenshots = false;
+static constexpr bool kEnableScreenshots = true;
 
 // For developers only. When enabled, clicking on a
 // screen's title field generates a Debug event for that
@@ -56,6 +56,7 @@ static HistogramStyles histogram_styles;
 
 struct PolarChartStyles {
   lv_style_t bg;
+  lv_style_t series_bg;
   lv_style_t line;
 };
 
@@ -131,7 +132,7 @@ static void init_chart_styles() {
   // Background style
   lv_style_init(&chart_styles.bg);
 
-  common_lv_chart_bg_style((&chart_styles.bg));
+  common_lv_chart_bg_style(&chart_styles.bg);
 
   // Series style
   lv_style_init(&chart_styles.series);
@@ -149,16 +150,23 @@ static void init_polar_chart_styles() {
   // Background style
   lv_style_init(&polar_chart_styles.bg);
 
-  common_lv_chart_bg_style((&polar_chart_styles.bg));
+  common_lv_chart_bg_style(&polar_chart_styles.bg);
 
-  // Series style
+  // Series bg style (grid)
+  lv_style_init(&polar_chart_styles.series_bg);
+  lv_style_set_line_dash_gap(&polar_chart_styles.series_bg, LV_STATE_DEFAULT,
+                             0);
+  lv_style_set_line_color(&polar_chart_styles.series_bg, LV_STATE_DEFAULT,
+                          LV_COLOR_MAKE(0x00, 0x40, 0x00));  // dark green
+
+  // Line style
   lv_style_init(&polar_chart_styles.line);
 
   // static lv_style_t style_line;
   //           lv_style_init(&style_line);
   lv_style_set_line_width(&polar_chart_styles.line, LV_STATE_DEFAULT, 2);
   lv_style_set_line_color(&polar_chart_styles.line, LV_STATE_DEFAULT,
-                          LV_COLOR_RED);
+                          LV_COLOR_YELLOW);
   // lv_style_set_line_rounded(&style_line, LV_STATE_DEFAULT, true);
 
   // lv_style_set_size(&chart_styles.series, LV_STATE_DEFAULT, 0);
@@ -472,35 +480,44 @@ void create_polar_chart(const Screen& screen,
   init_styles_if_needed();
 
   lv_obj_t* lv_chart = lv_chart_create(screen.lv_screen, NULL);
-  common_lv_chart_settings(lv_chart, axis_configs);
+  // common_lv_chart_settings(lv_chart, axis_configs);
+  //
+  //                                    const ChartAxisConfigs& axis_configs) {
+  lv_obj_set_click(lv_chart, false);
 
-  // Change to NONE?
+  // NOTE: Padding on top and right is required to avoid clipping the
+  // x and y lables.
+  const bool y_labels_enabled = axis_configs.y.is_enabled();
+  lv_obj_set_style_local_pad_top(lv_chart, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT,
+                                 10);
+  lv_obj_set_style_local_pad_bottom(lv_chart, LV_OBJ_PART_MAIN,
+                                    LV_STATE_DEFAULT, 40);
+  lv_obj_set_style_local_pad_right(lv_chart, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT,
+                                   20);
+  lv_obj_set_style_local_pad_left(lv_chart, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT,
+                                  y_labels_enabled ? 40 : 20);
+
+  lv_obj_set_size(lv_chart, 280, 260);
+  // The x,y offsets here are fine tweaks of the chat position.
+  lv_obj_align(lv_chart, NULL, LV_ALIGN_CENTER, 0, 0);
+
+  set_chart_scale(lv_chart, axis_configs);
+
+  // // Change to NONE?
   lv_chart_set_type(lv_chart, LV_CHART_TYPE_LINE);
-
-  // lv_chart_set_update_mode(lv_chart, LV_CHART_UPDATE_MODE_SHIFT);
-  // TODO: set this to actual number of X pixels for better resolution.
 
   // Change to 0?
   lv_chart_set_point_count(lv_chart, 1);
 
-  // if (ui_event_id != ui_events::UI_EVENT_NONE) {
-  //   lv_obj_set_click(lv_chart, true);
-  //   const lv_event_cb_t event_cb = ui_events::get_event_handler(ui_event_id);
-  //   lv_obj_set_event_cb(lv_chart, event_cb);
-  // }
+  // lv_obj_set_style_local_bg_color(lv_chart, LV_CHART_PART_BG,
+  // LV_STATE_DEFAULT, LV_COLOR_BLACK);
 
-  // // Add first data series.
-  // lv_chart_series_t* lv_series1 =
-  //     lv_chart_add_series(lv_chart, LV_COLOR_YELLOW);
-  // // Maybe add a second data series.
-  // lv_chart_series_t* lv_series2 =
-  //     (num_series >= 2) ? lv_chart_add_series(lv_chart, LV_COLOR_CYAN)
-  //                       : nullptr;
+  //============== line
 
   lv_obj_t* lv_line = lv_line_create(screen.lv_screen, NULL);
 
-  lv_obj_set_size(lv_line, 100, 100);
-  lv_obj_set_pos(lv_line, 50, 50);
+  lv_obj_set_size(lv_line, 250, 250);
+  lv_obj_set_pos(lv_line, 0, 0);
   // lv_line_set_points(line1, points, num_points);     /*Set the points*/
   // lv_obj_add_style(line1, LV_LINE_PART_MAIN, &style_line);     /*Set the
   // points*/
@@ -509,10 +526,19 @@ void create_polar_chart(const Screen& screen,
   lv_obj_add_style(lv_chart, LV_CHART_PART_BG,
                    &polar_chart_styles.bg);  // apply background style
 
-  lv_obj_add_style(lv_line, LV_CHART_PART_SERIES,
+                     lv_obj_add_style(lv_chart, LV_CHART_PART_SERIES_BG,
+                   &chart_styles.series_bg);  // apply series background style
+
+
+  lv_obj_add_style(lv_line, LV_LINE_PART_MAIN,
                    &polar_chart_styles.line);  // Apply part series style.
+
   // lv_obj_add_style(lv_chart, LV_CHART_PART_SERIES_BG,
   //                 &chart_styles.series_bg);  // apply series background style
+
+  // static lv_point_t points[] = {{50, 50}, {100, 100}};
+  //  lv_line_set_points(polar_chart_.lv_chart, points,
+  //                      2); /*Set the points*/
 
   polar_chart->lv_chart = lv_chart;
   polar_chart->lv_line = lv_line;
