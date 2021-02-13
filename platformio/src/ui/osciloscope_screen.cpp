@@ -65,15 +65,20 @@ void OsciloscopeScreen::setup(uint8_t screen_num) {
 };
 
 void OsciloscopeScreen::on_load() {
+  clear_chart();
   // Force display update on first loop.
-  startCapture();
-  chart_.ser1.clear();
-  chart_.ser2.clear();
+  // lv_state_t old_state = lv_obj_get_state(run_button_.lv_button, LV_BTN_PART_MAIN);
+  // lv_obj_set_state(run_button_.lv_button, old_state & !LV_STATE_CHECKED);
+  // //startCapture();
+
+  // chart_.ser1.clear();
+  // chart_.ser2.clear();
 };
 
 void OsciloscopeScreen::clear_chart() {
   chart_.ser1.clear();
   chart_.ser2.clear();
+  // This enables capture.
   lv_obj_set_state(run_button_.lv_button, LV_STATE_CHECKED);
   lv_chart_refresh(chart_.lv_chart);
 }
