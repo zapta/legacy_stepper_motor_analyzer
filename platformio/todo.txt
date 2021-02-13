@@ -1,4 +1,5 @@
 
+* Have a common capture buffer and allow to switch between capture and phase screens without loosing the captured screen.
 
 * Try to eliminate the external EEPROM by storing the settings in internal flash per discussion at https://community.platformio.org/t/how-to-reserve-a-page-of-flash-memory-stm32-arduino/18664
 
