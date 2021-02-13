@@ -179,6 +179,10 @@ extern void create_histogram(const Screen& screen, uint16_t num_columns,
 // If 'lable' is null it is ignored.
 void create_page_title(const Screen& screen, const char* title, Label* label);
 
+void create_polar_chart(const Screen& screen,
+                        const ChartAxisConfigs& axis_configs,
+                        PolarChart* polar_chart);
+
 // If 'page_elements' is null then it is ignored. Screen number is ignored if
 // zero.
 extern void create_page_elements(const Screen& screen, const char* title,

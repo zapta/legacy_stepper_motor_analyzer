@@ -9,6 +9,7 @@
 #include "retraction_chart_screen.h"
 #include "settings_screen.h"
 #include "osciloscope_screen.h"
+#include "phase_screen.h"
 #include "speed_gauge_screen.h"
 #include "steps_chart_screen.h"
 #include "steps_histogram_screen.h"
@@ -33,6 +34,7 @@ static RetractionChartScreen retraction_chart_screen;
 static TimeHistogramScreen screen_time_histogram;
 static StepsHistorgramScreen steps_histogram_screen;
 static OsciloscopeScreen osciloscope_screen;
+static PhaseScreen phase_screen;
 static CurrentHistogramScreen current_histogram_screen;
 
 // Order here determines screen 'next/previous' order.
@@ -45,6 +47,7 @@ static const ScreenDesc screen_table[] = {
     {SCREEN_STEPS_HISTOGRAM, &steps_histogram_screen},
     {SCREEN_CURRENT_HISTOGRAM, &current_histogram_screen},
     {SCREEN_OSCILOSCOPE, &osciloscope_screen},
+    {SCREEN_PHASE, &phase_screen},
 };
 constexpr int kNumScreens = sizeof(screen_table) / sizeof(screen_table[0]);
 

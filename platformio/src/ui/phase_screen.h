@@ -3,9 +3,9 @@
 #include "misc/elapsed.h"
 #include "screen_manager.h"
 
-class OsciloscopeScreen : public screen_manager::Screen {
+class PhaseScreen : public screen_manager::Screen {
  public:
-  OsciloscopeScreen() {};
+  PhaseScreen() {};
   virtual void setup(uint8_t screen_num) override;
   virtual void on_load() override;
   virtual void loop() override;
@@ -18,14 +18,14 @@ class OsciloscopeScreen : public screen_manager::Screen {
 };
 
   void startCapture();
-  void set_displayed_status(Status status);
+  //void set_displayed_status(Status status);
   void clear_chart();
 
   Elapsed display_update_elapsed_;
-  ui::Chart chart_;
-  bool capture_is_enabled_ = true;
+  ui::PolarChart polar_chart_;
+  //bool capture_is_enabled_ = true;
   bool capture_in_progress_ = false;
-  ui::Button run_button_;
-  ui::Label status_label_;
-  bool alternative_scale_ = false;
+  //ui::Button run_button_;
+  //ui::Label status_label_;
+  //bool alternative_scale_ = false;
 };

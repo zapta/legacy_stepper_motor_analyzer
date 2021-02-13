@@ -71,8 +71,6 @@ void OsciloscopeScreen::on_load() {
   chart_.ser2.clear();
 };
 
-void OsciloscopeScreen::on_unload(){};
-
 void OsciloscopeScreen::clear_chart() {
   chart_.ser1.clear();
   chart_.ser2.clear();

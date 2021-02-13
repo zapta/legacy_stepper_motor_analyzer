@@ -7,7 +7,7 @@ import os
 
 
 # Read lines from input file
-file1 = open('screenshot.txt', 'r')
+file1 = open('c:/projects/simple_stepper_motor_analyzer/repo/tools/screenshot.txt', 'r')
 lines = file1.readlines()
 
 
