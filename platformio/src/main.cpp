@@ -101,10 +101,10 @@ void loop() {
     LED1_OFF;
   }
 
-  // Periodic report over USB/Serial.
-  // if (elapsed_from_last_dump.elapsed_millis() > 5000) {
-  //   elapsed_from_last_dump.reset();
-  //   Serial.printf("\nMemory: %d\n", memory::free_memory());
-  //   lv_adapter::dump_stats();
-  // }
+  //Periodic report over USB/Serial.
+  if (elapsed_from_last_dump.elapsed_millis() > 5000) {
+    elapsed_from_last_dump.reset();
+    Serial.printf("\nMemory: %d\n", memory::free_memory());
+    lv_adapter::dump_stats();
+  }
 }

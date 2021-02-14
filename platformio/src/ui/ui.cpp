@@ -497,10 +497,10 @@ void create_polar_chart(const Screen& screen,
   lv_obj_set_style_local_pad_left(lv_chart, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT,
                                   y_labels_enabled ? 40 : 20);
 
-  // We adjusted this to have a square plot area.
-  lv_obj_set_size(lv_chart, 270, 260);
+  // We adjusted this to have a square plot area, considering the padding.
+  lv_obj_set_size(lv_chart, 260, 250);
   // The x,y offsets here are fine tweaks of the chat position.
-  lv_obj_align(lv_chart, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(lv_chart, NULL, LV_ALIGN_CENTER, -40, 0);
 
   set_chart_scale(lv_chart, axis_configs);
 
