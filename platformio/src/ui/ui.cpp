@@ -2,22 +2,10 @@
 
 #include <Arduino.h>
 
+#include "config.h"
 #include "lvgl.h"
 
 namespace ui {
-
-// For UI debugging. Shows the boundaries of UI objects.
-static constexpr bool kDebugBackgrounds = false;
-
-// For developers only. When enabled, clicking on a
-// screen's title field pauses the program and sends a screen
-// dump over the USB/serial connection.
-static constexpr bool kEnableScreenshots = false;
-
-// For developers only. When enabled, clicking on a
-// screen's title field generates a Debug event for that
-// screen.
-static constexpr bool kEnableDebugEvents = false;
 
 static const lv_color_t kDebugBackgroundColor = LV_COLOR_MAKE(0x40, 0x40, 0x40);
 
@@ -118,7 +106,7 @@ static void common_lv_chart_bg_style(lv_style_t* bg_style) {
   lv_style_set_radius(bg_style, LV_STATE_DEFAULT, 0);
   lv_style_set_bg_color(
       bg_style, LV_STATE_DEFAULT,
-      kDebugBackgrounds ? kDebugBackgroundColor : LV_COLOR_BLACK);
+      config::kDebugBackgrounds ? kDebugBackgroundColor : LV_COLOR_BLACK);
 
   lv_style_set_text_font(bg_style, LV_STATE_DEFAULT,
                          &font_montserrat_alphanum_12);
@@ -262,7 +250,7 @@ void create_gauge(const Screen& screen, const GaugeAxisConfig& config,
     lv_obj_set_event_cb(lv_gauge, event_cb);
   }
 
-  if (kDebugBackgrounds) {
+  if (config::kDebugBackgrounds) {
     lv_obj_set_style_local_bg_opa(lv_gauge, LV_GAUGE_PART_MAIN,
                                   LV_STATE_DEFAULT, LV_OPA_COVER);
     lv_obj_set_style_local_bg_color(lv_gauge, LV_GAUGE_PART_MAIN,
@@ -298,7 +286,7 @@ void create_button(const Screen& screen, lv_coord_t width, lv_coord_t x,
     lv_obj_set_event_cb(lv_button, event_cb);
   }
 
-  if (kDebugBackgrounds) {
+  if (config::kDebugBackgrounds) {
     lv_obj_set_style_local_bg_opa(lv_button, LV_BTN_PART_MAIN, LV_STATE_DEFAULT,
                                   LV_OPA_COVER);
     lv_obj_set_style_local_bg_color(lv_button, LV_BTN_PART_MAIN,
@@ -332,7 +320,7 @@ void create_label(const Screen& screen, lv_coord_t width, lv_coord_t x,
                                     LV_STATE_DEFAULT, text_color);
   lv_obj_set_click(lv_label, false);
 
-  if (kDebugBackgrounds) {
+  if (config::kDebugBackgrounds) {
     lv_obj_set_style_local_bg_opa(lv_label, LV_LABEL_PART_MAIN,
                                   LV_STATE_DEFAULT, LV_OPA_COVER);
     lv_obj_set_style_local_bg_color(lv_label, LV_LABEL_PART_MAIN,
@@ -512,27 +500,26 @@ void create_polar_chart(const Screen& screen,
   lv_chart_set_point_count(lv_chart, 1);
 
   // Determine plot area dimensions.
-   lv_area_t a;
-   lv_chart_get_series_area(lv_chart, &a);
-   const lv_coord_t width = lv_area_get_width(&a);
-   const lv_coord_t height = lv_area_get_height(&a);
-   const lv_coord_t max_radius = min(width, height) / 2;
-   
+  lv_area_t a;
+  lv_chart_get_series_area(lv_chart, &a);
+  const lv_coord_t width = lv_area_get_width(&a);
+  const lv_coord_t height = lv_area_get_height(&a);
+  const lv_coord_t max_radius = min(width, height) / 2;
 
   //============== polyline
 
   lv_obj_t* lv_line = lv_line_create(screen.lv_screen, NULL);
 
-  lv_obj_set_size(lv_line, 2*max_radius, 2*max_radius);
-  lv_obj_set_pos(lv_line, (a.x1 + a.x2)/2 - max_radius,  (a.y1 + a.y2) /2 - max_radius);
+  lv_obj_set_size(lv_line, 2 * max_radius, 2 * max_radius);
+  lv_obj_set_pos(lv_line, (a.x1 + a.x2) / 2 - max_radius,
+                 (a.y1 + a.y2) / 2 - max_radius);
 
   // Apply styles.
   lv_obj_add_style(lv_chart, LV_CHART_PART_BG,
                    &polar_chart_styles.bg);  // apply background style
 
-                     lv_obj_add_style(lv_chart, LV_CHART_PART_SERIES_BG,
+  lv_obj_add_style(lv_chart, LV_CHART_PART_SERIES_BG,
                    &chart_styles.series_bg);  // apply series background style
-
 
   lv_obj_add_style(lv_line, LV_LINE_PART_MAIN,
                    &polar_chart_styles.line);  // Apply part series style.
@@ -581,11 +568,11 @@ void create_page_title(const Screen& screen, const char* title, Label* label) {
   ui::create_label(screen, 220, 480 - 220 - 5, 0, title, kFontPageTitles,
                    LV_LABEL_ALIGN_RIGHT, LV_COLOR_GRAY, title_label_ptr);
 
-  if (kEnableScreenshots || kEnableDebugEvents) {
+  if (config::kEnableScreenshots || config::kEnableDebugEvents) {
     lv_obj_set_click(title_label_ptr->lv_label, true);
     const lv_event_cb_t event_cb = ui_events::get_event_handler(
-        kEnableScreenshots ? ui_events::UI_EVENT_SCREENSHOT
-                           : ui_events::UI_EVENT_DEBUG);
+        config::kEnableScreenshots ? ui_events::UI_EVENT_SCREENSHOT
+                                   : ui_events::UI_EVENT_DEBUG);
     lv_obj_set_event_cb(title_label_ptr->lv_label, event_cb);
   }
 }
