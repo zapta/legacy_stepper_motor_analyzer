@@ -394,8 +394,11 @@ The screenshot below show an operation of a stepper in half steps mode. The dime
 Data | Description
 :------------ | :-------------
 Lissajous&nbsp;curve | A Lissajous curve drawn from the current pattern of coil 1 (x) and coil2(y). 
+Capture speed | Shows the signal capture time. Fast mode works better with fast moving steppers and slow mode works with slow moving steppers. Tap the graph to toggle.
 
-**NOTE:** The graph is updated only when sufficient stepper motor movement is detected.
+**NOTES** 
+* The graph is updated only when sufficient stepper motor movement is detected.
+* To view the current pattern that resulted in the current phase pattern, use the navigation button to switch the current patters page, and vice versa.
 
 &nbsp;
 #### Page Actions
@@ -403,13 +406,16 @@ Lissajous&nbsp;curve | A Lissajous curve drawn from the current pattern of coil 
 Action | Description
 :------------: | :-------------
 ![](./www/trash.png) | Clear all data.
+![](./www/pause.png) | When running, pauses the display updates.
+![](./www/run.png) | When paused, resume the display updates.
+Tap the graph | This toggles the capture time between fast and slow speeds.
 
 
 &nbsp;
 
 ---
 
-## Design Specification
+## Reference Design Specification
 
 Item | Specification
 :------------ | :------------- 
@@ -477,11 +483,9 @@ A compatible TFT/Touch can be ordered at https://www.buydisplay.com/lcd-3-5-inch
 ![](./www/board2.jpg)
 
 ## Flashing a new firmware
-Flashing the Analyzer with firmware can be done in a few ways. For software developers we recommend using StLink V2 and SWD which are well supported by the platformio IDE and enable debugging ans single stepping. A simpler approach that is recommended for end users is to use the builtin DFU protocol of  STM32 processor such as the one we use here. Adafruit has a [good description of the process](https://learn.adafruit.com/adafruit-stm32f405-feather-express/dfu-bootloader-details) with the only difference that to enable the DFU bootloader mode you will need to perform the following sequence rather then the one specified by Adafruit:
-1. Press and hold the NRST button.
-2. Press and hold the BOOT0 button.
-3. Release the NRST button. 
-4. Release the BOOT0 button. 
+Flashing the Analyzer with firmware can be done in a few ways. For software developers we recommend using StLink V2 and SWD which are well supported by the platformio IDE and enable debugging ans single stepping. A simpler approach that is recommended for end users is to use the builtin DFU protocol of the Analyzer's STM32 processor such as the one we use here. Adafruit has a [good description of the process](https://learn.adafruit.com/adafruit-stm32f405-feather-express/dfu-bootloader-details). The only difference that to enable the DFU bootloader mode connect the analyzer to the computer while its BOOT0 on button on the back is pressed.
+
+**ONLINE LOADER:** We also had good results with Google Chrome browser and this online loader https://devanlai.github.io/webdfu/dfu-util/ . The Analyzer should appear as STM32 BOOTLOADER and should be programmed with the configuration Internal Flash 0x08000000.
 
 ## How to modify the firmware?
 The source code of the Analyzer is available on this github repository. It is a STM32 C++ Platformio project that uses the Arduino framework. The user interface is based on the LVGL library and the project includes its own port to support TFT/Touch used.  Knowledge of C++ and Platformio is required and is outside the scope of this document.
