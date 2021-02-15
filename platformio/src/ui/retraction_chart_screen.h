@@ -22,5 +22,6 @@ class RetractionChartScreen : public screen_manager::Screen {
   uint8_t field_update_divider_ = 0;
   ui::Label retraction_field_;
   ui::Chart chart_;
-  bool alternative_scale_ = false;
+  // Currently supporting 0, 1, 2
+  int scale_ = 0;
 };

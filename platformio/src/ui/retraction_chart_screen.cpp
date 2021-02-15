@@ -12,16 +12,20 @@ static constexpr uint32_t kUpdateIntervalMillis = 1000 / kUpdatesPerSecond;
 // Update the retraction field once every N times the chart is updated.
 static constexpr int kFieldUpdateRatio = 2;
 
-static const ui::ChartAxisConfigs kAxisConfigsNormal{
-    .y_range = {.min = 0, .max = 100},
-    .x = {.labels = "0\n2s\n4s\n6s\n8s\n10s", .num_ticks = 4, .dividers = 4},
-    .y = {.labels = "100\n80\n60\n40\n20\n0", .num_ticks = 4, .dividers = 4}};
+static const ui::ChartAxisConfigs kScaleAxisConfigs[] = {
+    {.y_range = {.min = 0, .max = 100},
+     .x = {.labels = "0\n2s\n4s\n6s\n8s\n10s", .num_ticks = 4, .dividers = 4},
+     .y = {.labels = "100\n80\n60\n40\n20\n0", .num_ticks = 4, .dividers = 4}},
 
-static const ui::ChartAxisConfigs kAxisConfigsAlternative{
-    .y_range = {.min = 0, .max = 500},
-    .x = {.labels = "0\n2s\n4s\n6s\n8s\n10s", .num_ticks = 4, .dividers = 4},
-    .y = {
-        .labels = "500\n400\n300\n200\n100\n0", .num_ticks = 4, .dividers = 4}};
+    {.y_range = {.min = 0, .max = 500},
+     .x = {.labels = "0\n2s\n4s\n6s\n8s\n10s", .num_ticks = 4, .dividers = 4},
+     .y = {.labels = "500\n400\n300\n200\n100\n0",
+           .num_ticks = 4,
+           .dividers = 4}},
+
+    {.y_range = {.min = 0, .max = 30},
+     .x = {.labels = "0\n2s\n4s\n6s\n8s\n10s", .num_ticks = 4, .dividers = 4},
+     .y = {.labels = "30\n20\n10\n0", .num_ticks = 2, .dividers = 2}}};
 
 void RetractionChartScreen::setup(uint8_t screen_num) {
   // y_offset_ = 0;
@@ -29,7 +33,7 @@ void RetractionChartScreen::setup(uint8_t screen_num) {
   // points_buffer_.clear();
   ui::create_screen(&screen_);
   ui::create_page_elements(screen_, "RETRACTION CHART", screen_num, nullptr);
-  ui::create_chart(screen_, kNumPoints, 1, kAxisConfigsNormal,
+  ui::create_chart(screen_, kNumPoints, 1, kScaleAxisConfigs[0],
                    ui_events::UI_EVENT_SCALE, &chart_);
 
   ui::create_label(screen_, 110, 120, 293, "", ui::kFontNumericDataFields,
@@ -55,9 +59,9 @@ void RetractionChartScreen::on_event(ui_events::UiEventId ui_event_id) {
       break;
 
     case ui_events::UI_EVENT_SCALE:
-      alternative_scale_ = !alternative_scale_;
-      chart_.set_scale(alternative_scale_ ? kAxisConfigsAlternative
-                                          : kAxisConfigsNormal);
+      // TODO: make 3 a const (derive from the config table size).
+      scale_ = (scale_ + 1) % 3;
+      chart_.set_scale(kScaleAxisConfigs[scale_]);
       lv_chart_refresh(chart_.lv_chart);
 
     default:

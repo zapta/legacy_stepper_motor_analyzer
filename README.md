@@ -207,7 +207,7 @@ Retraction value |  This field shows the current retraction level in a numeric f
 Action | Description
 :------------: | :-------------
 ![](./www/trash.png) | Clear all data.
-Tap the graph | Toggles the range of the vertical axis.
+Tap the graph | Changes the range of the vertical axis.
 
 &nbsp;
 
