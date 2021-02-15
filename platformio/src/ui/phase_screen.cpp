@@ -14,15 +14,20 @@ static const ui::ChartAxisConfigs kAxisConfigs{
 void PhaseScreen::setup(uint8_t screen_num) {
   ui::create_screen(&screen_);
   ui::create_page_elements(screen_, "PHASE PATTERNS", screen_num, nullptr);
-  ui::create_polar_chart(screen_, kAxisConfigs, &polar_chart_);
+  ui::create_polar_chart(screen_, kAxisConfigs, ui_events::UI_EVENT_SCALE,
+                         &polar_chart_);
   capture_controls_.setup(screen_);
+  // We set the text dynamically when updating the display.
+  ui::create_label(screen_, 0, 350, 180, "??", ui::kFontSmallText,
+                   LV_LABEL_ALIGN_CENTER, LV_COLOR_SILVER, &scale_lable_);
+  lv_label_set_long_mode(scale_lable_.lv_label, LV_LABEL_LONG_EXPAND);
+  scale_lable_.set_click_event(ui_events::UI_EVENT_SCALE);
 };
 
-void PhaseScreen::on_load() { 
-    capture_controls_.sync_button_to_state();
-
+void PhaseScreen::on_load() {
+  capture_controls_.sync_button_to_state();
   update_display();
-   };
+};
 
 void PhaseScreen::on_event(ui_events::UiEventId ui_event_id) {
   switch (ui_event_id) {
@@ -31,6 +36,12 @@ void PhaseScreen::on_event(ui_events::UiEventId ui_event_id) {
       capture_controls_.sync_button_to_state();
       update_display();
       break;
+
+    case ui_events::UI_EVENT_SCALE: {
+      capture_util::toggle_scale();
+      capture_controls_.sync_button_to_state();
+      update_display();
+    } break;
 
     // This makes the compiler happy.
     default:
@@ -45,6 +56,10 @@ static lv_coord_t map_line_coord(int milliamps, lv_coord_t max_radius) {
 
 void PhaseScreen::update_display() {
   capture_controls_.update_display_from_state();
+
+  scale_lable_.set_text(capture_util::alternative_scale()
+                            ? "SLOW Capture\ntime:  100ms"
+                            : "FAST Capture\ntime:  20ms");
 
   if (!capture_util::has_data()) {
     lv_line_set_points(polar_chart_.lv_line, points, 0);

@@ -55,6 +55,13 @@ struct Label {
     lv_obj_set_style_local_text_color(lv_label, LV_LABEL_PART_MAIN,
                                       LV_STATE_DEFAULT, text_color);
   }
+  void set_click_event(ui_events::UiEventId ui_event_id) {
+    if (ui_event_id != ui_events::UI_EVENT_NONE) {
+      lv_obj_set_click(lv_label, true);
+      const lv_event_cb_t event_cb = ui_events::get_event_handler(ui_event_id);
+      lv_obj_set_event_cb(lv_label, event_cb);
+    }
+  }
 };
 
 struct Checkbox {
@@ -129,8 +136,6 @@ struct Histogram {
   lv_chart_series_t* lv_series = nullptr;
 };
 
-
-
 struct PolarChart {
   lv_coord_t max_radius;
   lv_obj_t* lv_chart = nullptr;
@@ -184,6 +189,7 @@ void create_page_title(const Screen& screen, const char* title, Label* label);
 
 void create_polar_chart(const Screen& screen,
                         const ChartAxisConfigs& axis_configs,
+                        ui_events::UiEventId ui_event_id,
                         PolarChart* polar_chart);
 
 // If 'page_elements' is null then it is ignored. Screen number is ignored if

@@ -311,6 +311,7 @@ void create_label(const Screen& screen, lv_coord_t width, lv_coord_t x,
   lv_obj_set_style_local_text_font(lv_label, LV_LABEL_PART_MAIN,
                                    LV_STATE_DEFAULT, lv_font);
   lv_label_set_align(lv_label, label_align);
+  // Default policy. We overrite it when needed.
   lv_label_set_long_mode(lv_label, LV_LABEL_LONG_CROP);
   if (width != 0) {
     lv_obj_set_size(lv_label, width, lv_font->line_height);
@@ -464,13 +465,11 @@ void create_chart(const Screen& screen, uint16_t num_points, int num_series,
 
 void create_polar_chart(const Screen& screen,
                         const ChartAxisConfigs& axis_configs,
+                        ui_events::UiEventId ui_event_id,
                         PolarChart* polar_chart) {
   init_styles_if_needed();
 
   lv_obj_t* lv_chart = lv_chart_create(screen.lv_screen, NULL);
-  // common_lv_chart_settings(lv_chart, axis_configs);
-  //
-  //                                    const ChartAxisConfigs& axis_configs) {
   lv_obj_set_click(lv_chart, false);
 
   // NOTE: Padding on top and right is required to avoid clipping the
@@ -491,6 +490,12 @@ void create_polar_chart(const Screen& screen,
   lv_obj_align(lv_chart, NULL, LV_ALIGN_CENTER, -40, 0);
 
   set_chart_scale(lv_chart, axis_configs);
+
+  if (ui_event_id != ui_events::UI_EVENT_NONE) {
+    lv_obj_set_click(lv_chart, true);
+    const lv_event_cb_t event_cb = ui_events::get_event_handler(ui_event_id);
+    lv_obj_set_event_cb(lv_chart, event_cb);
+  }
 
   // We don't use the chart to draw the graph. Instead we use
   // a polyline (lv_line) that overlays it.
