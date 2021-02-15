@@ -51,7 +51,8 @@ void PhaseScreen::on_event(ui_events::UiEventId ui_event_id) {
 
 // Maps -2500 to +2500 ma to 0 to 2*max_radius.
 static lv_coord_t map_line_coord(int milliamps, lv_coord_t max_radius) {
-  return (lv_coord_t)(((milliamps + 2500) * max_radius) / 2500);
+  constexpr int kMaxScale = 2500;
+  return max_radius + (lv_coord_t)((milliamps * max_radius) / kMaxScale);
 }
 
 void PhaseScreen::update_display() {
