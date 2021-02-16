@@ -4,14 +4,21 @@
 import sys
 from PIL import Image, ImageDraw
 import os
+from datetime import datetime
 
 
 # Read lines from input file
-file1 = open('c:/projects/simple_stepper_motor_analyzer/repo/tools/screenshot.txt', 'r')
+file1 = open(
+    'c:/projects/simple_stepper_motor_analyzer/repo/tools/screenshot.txt', 'r')
 lines = file1.readlines()
 
 
 image = Image.new(mode="RGB", size=(480, 320), color="red")
+
+
+dateTimeObj = datetime.now()
+timestamp = "%d%02d%02d-%02d%02d%02d" % (dateTimeObj.year, dateTimeObj.month,  dateTimeObj.day, dateTimeObj.hour,
+                                      dateTimeObj.minute, dateTimeObj.second)
 
 # Set one pixel in the image.
 
@@ -35,7 +42,7 @@ def process_data_line(l, line):
     tokens = line[1:].split(',')
     x0 = int(tokens[0])
     y0 = int(tokens[1])
-    n = int(tokens[2])
+    # n = int(tokens[2])
     color_tokens = tokens[3:]
     x = x0
     for color_token in color_tokens:
@@ -43,8 +50,8 @@ def process_data_line(l, line):
         count = int(parts[0])
         color = int(parts[1], 16)
         for i in range(count):
-           put_pixel(x, y0, color)
-           x+=1
+            put_pixel(x, y0, color)
+            x += 1
 
 
 # Increment l to the index of data line past the BEGIN line.
@@ -67,5 +74,5 @@ while True:
     process_data_line(l, line)
     l += 1
 
-image.save("screenshot.png")
+image.save(timestamp + ".png")
 print("All done.")
