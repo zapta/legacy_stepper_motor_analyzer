@@ -279,6 +279,9 @@ void create_button(const Screen& screen, lv_coord_t width, lv_coord_t x,
 
   lv_obj_set_pos(lv_button, x, y);
 
+  // Extend the active area for easier clicking.
+  lv_obj_set_ext_click_area(lv_button, 15, 15, 20, 20);
+
   if (ui_event_id != ui_events::UI_EVENT_NONE) {
     // Nullable.
     const lv_event_cb_t event_cb = ui_events::get_event_handler(ui_event_id);
