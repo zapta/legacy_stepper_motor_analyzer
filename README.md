@@ -11,6 +11,15 @@ https://github.com/zapta/simple_stepper_motor_analyzer
 
 &nbsp;
 
+## Demonstration
+
+Michael from the Teaching Tech youtube channel made [a great video explaining how stepper motors work](https://youtu.be/4iII25DGIdA) and used the Simple Stepper Motor Analyzer for some of the demonstrations. 
+
+![](./www/teaching_tech_thumbnail.png)
+
+
+&nbsp;
+
 ## Highlights
 * Low cost and minimalist DYI hardware design.
 * Standalone. Doesn't require a computer to operate.
@@ -36,6 +45,14 @@ The Analyzer is provided to the community as a public domain reference design th
 ---
 ## Disclaimer
 THE DESIGN IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE DESIGN OR THE USE OR OTHER DEALINGS IN THE DESIGN.
+
+---
+
+## Alternative construction option (enclosed case)
+**NOTE:** This pages outlines the open base construction options which is easier and straight forward. For a more involved and potentially more satisfying construction option, which is also featured in the Teaching Tech youtube video, see https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/case_option.md
+
+![](./www/case_001_small.jpg)
+
 
 ---
 ## How does it work?
