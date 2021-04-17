@@ -1301,10 +1301,6 @@ Wire Wire Line
 	3850 4450 3950 4450
 Wire Wire Line
 	3850 4700 3850 4750
-Text Notes 4000 4650 0    50   ~ 0
-Do not\npopulate
-Text Notes 800  6550 0    50   ~ 0
-Do not\npopulate
 $Comp
 L Memory_EEPROM:M24C02-FMN U4
 U 1 1 6008F2C1
