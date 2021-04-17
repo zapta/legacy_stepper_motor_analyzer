@@ -24,15 +24,15 @@ Michael from the Teaching Tech youtube channel made [a great video explaining ho
 * Low cost and minimalist DYI hardware design.
 * Standalone. Doesn't require a computer to operate.
 * Analyzes the stepper motor signals in the actual system (e.g. a 3D printer).
-* Does not interfere with the operating equipment. Galvanically isolated current sensors.
-* Each to connect.
-* Intuitive color/touch user interfere.
-* Resolution of 0.01 of a full step.
+* Galvanically isolated current sensors. Does not interfere with the operating equipment, even when its turned off.
+* Easy to connect using a pair 4 wire pass through connectors.
+* Intuitive user interface with color display and a capacitive touch.
+* Microstepping resolution of 1% of a full step.
 * Provides momentary readings, signal patterns, and statistical measurements.
 * Hardware and software are open sourced with a generous license.
 * Based on free tools (Kicad, platformio, LVGL, STM32Duino).
 * Can be easily customized (new featured, cost reduction, data link to a computer, etc).
-* Requires 5VDC, 200ma and a micro USB  cable.
+* Powered 5VDC, 200ma via a USB-C connector.
 
 
 ## Overview
