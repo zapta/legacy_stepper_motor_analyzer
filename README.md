@@ -470,28 +470,12 @@ The electronic schematic, PCB layout, gerber files, and the firmware source file
 
 [Schematic](./www/stepper_analyzer-sch.pdf)
 
-&nbsp;
-
-####BOM
-
-Part | Specification | Info
-:------------ | :------------- | :------------------
-TFT display | ER-TFTM035-6, Pin Header Connection-8080 16-bit Parallel, 5.0V, Capacitive Touch Panel, No font chip. | https://www.buydisplay.com/lcd-3-5-inch-320x480-tft-display-module-optl-touch-screen-w-breakout-board
-STM32F401CE BlackPill| WeAct Studio STM32F401C, 25Mhz crystal. | https://github.com/WeActTC/WeAct-Studio-Product
-2 x current sensor.  | Allegro +/-2.5A galvanic isolated current sensor. | Allegro ACS70331EESATR-2P5B3
-Settings EEPROM | Microchip AT24C02D-SSHM-T | 256 bytes, I2C, 8-SOIC. 
-TFT connector | 2x20 pins, 0.1" pitch, female header.
-2 x stepper connector | 4 pin, 0.1" pitch, right angle, male, KF2510 connector. |Available from Aliexpress.
-Resistors, capacitors, LEDS | Per the schematic diagram | Typical package is SMD 0603. 
-PCB | 97 x 66 mm, 2 layers, standard design rules, gerber files are available on github | JLCPCB, PCBWay, etc, or shop at https://pcbshopper.com/
-
-
-A compatible TFT/Touch can be ordered at https://www.buydisplay.com/lcd-3-5-inch-320x480-tft-display-module-optl-touch-screen-w-breakout-board. Make sure to specify these options:
-
-![](./www/tft_order_options.png)
+[BOM](./Kicad/BOM.xlsx)
 
 
 **Instructions:** Build the PCB, use DFU or SWD protocols to program the released binary into the Blackpill, plugin the TFT screen, power and use. See instructions below on how to flash the firmware release you can find on this github repository.
+
+**NOTE:** These instructions are for the simpler  version which uses an open frame base. For ordering parts and building the enclosed version see https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/case_option.md .
 
 ![](./www/board1.jpg)
 
@@ -509,6 +493,10 @@ The source code of the Analyzer is available on this github repository. It is a 
 
 ## Mechanical
 We provide here a [3D model of a simple open frame carrier](./3d/base.stl). This design does not requires attaching the analyzer and the TFT board with screws or spacers and guarantees proper separation on the loose end. If you have an interesting design which you would like to share, please post in a model sharing site such as cults3d, thingiverse or grabcad and we will link it here.
+
+This open frame base does not require any spacers between the two boards and was designed 
+to prevent them from unintentionally touching each other.
+
 
 ![](./3d/base.png)
 

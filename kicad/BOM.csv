@@ -1,0 +1,16 @@
+ Quantity,Ref, Value,Status, Description,Source,Comments
+3,"C1, C2, C3",100nf,Required,"Ceramic capacitor 100nf, at least 10V, SMD 0603",Digikey 311-1369-1-ND,"Generic component, available from other  sources."
+2,"C4, C5",10uf,Requires,"Ceramic capacitor 10uf, at least 10V, SMD 0603",Digikey311-1817-1-ND,"Generic component, available from other  sources."
+1,R1,10k,Required,"Chip resistor 10k, SMD 0603",Digikey 13-AC0603FR-0711KLCT-ND,"Generic component, available from other  sources."
+2,"J1, J2",4 pins right angle connector,Required,KF2510 male connector right angle 0.1” pitch pin header,https://www.aliexpress.com/item/4000587555738.html,"Generic component, available from other  sources."
+1,J4,2x20 0.1” female header. ,Required,Connector_PinSocket_2.54mm:PinSocket_2x20_P2.54mm_Vertical,https://www.aliexpress.com/item/32747224548.html,"Generic component, available from other  sources."
+1,U1,WeAct STM32F4x1CE blackpill module.,Required,WeAct blackpill STM32F401CE 25Mhz or STM32F411CE.  Comes  with 2x20 pin headers to solder the blackpill to the analyzer’s PCB.,https://www.aliexpress.com/item/1005001456186625.html,"Some clones of WeAct modules are available. Make sure to have the same pinout and legit MCU.  STM32401CC wouldn’t work, also, make sure it has 25Mhz crystal (vs 8Mhz)."
+2,"U2, U3",ACS70331EESATR-2P5B3,Required,"Alegro current sensor, bidirectional, +/-2.5A.
+",Digikey 620-1889-1-ND,
+1,U4,AT24C02D-SSHM-T,Required,I2C EEPROM 256x8,Digikey AT24C02D-SSHM-TCT-ND,Clones are available on Aliexpress. We didn’t test them but should work as well.
+1,,Analyzer PCB Rev 1.0,Required,Gerber files are available the github repository.  96.7 x 66.4mm two layers.,"JLCPCB, Pcbway, your prefer PCB vendor or shop at https://pcbshopper.com/",
+1,,BuyDisplay 3.5” TFT with touch display ,Required,"ER-TFTM035-6, Pin Header Connection-8080 16-bit Parallel, 5.0V, Capacitive Touch Panel, No font chip.",https://www.buydisplay.com/lcd-3-5-inch-320x480-tft-display-module-optl-touch-screen-w-breakout-board,Make sure to select the exact options listed in the Description column. See example at https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/www/tft_order_options.png
+3,"D1, D2, D3",LED 0603.,"Optional, for firmware development only.","LED SMD 0603, colors of your choice.",https://www.aliexpress.com/item/32888575577.html,"Generic component, available from other  sources."
+3,"R2,R3, R4",3k3,"Optional, for firmware development only.","Chip resistor 3.3k, SMD 0603",Digikey YAG3354CT-ND,"Generic component, available from other  sources."
+1,,STLINK V2,"Optional, for firmware development only.",Hardware debugger for STM32 MCUs.,"Digikey  497-10484-ND
+",Inexpensive USB dongle clones are available from Aliexpress. We expect them to work but didn’t test them.
