@@ -19,7 +19,7 @@ This page describes an alternative way to constructs the the Simple Stepper Moto
 * Use four M2.5 16mm socket head screw to attach everything together, the four spaces fit between the TFT and the analyzer's PCB.
 
 **NOTE:** The OnShape source file of the case is at 
-https://cad.onshape.com/documents/146b8b994145177887407b23/v/c2dc7870c6f0bf989cd611b5/e/b6453eca2ba530476c30538a
+https://cad.onshape.com/documents/146b8b994145177887407b23/v/f2052a33bf7ac8993e3d7406/e/b6453eca2ba530476c30538a
 
 
 &nbsp;
