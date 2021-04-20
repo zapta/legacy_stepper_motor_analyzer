@@ -470,7 +470,7 @@ The electronic schematic, PCB layout, gerber files, and the firmware source file
 
 [Schematic](./www/stepper_analyzer-sch.pdf)
 
-[BOM](./Kicad/BOM.xlsx)
+[BOM](https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/kicad/BOM.csv)
 
 
 **Instructions:** Build the PCB, use DFU or SWD protocols to program the released binary into the Blackpill, plugin the TFT screen, power and use. See instructions below on how to flash the firmware release you can find on this github repository.
