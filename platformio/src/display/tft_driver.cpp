@@ -2,7 +2,7 @@
 
 #include "tft_driver.h"
 
-#include <arduino.h>
+#include <Arduino.h>
 
 #include "bssr_tables.h"
 #include "hal/gpio.h"

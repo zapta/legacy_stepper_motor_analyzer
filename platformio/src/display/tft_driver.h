@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <arduino.h>
+#include <Arduino.h>
 
 
 namespace tft_driver {

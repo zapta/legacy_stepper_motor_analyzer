@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <arduino.h>
+#include <Arduino.h>
 #include <stdio.h>
 #include <string.h>
 #include "misc/circular_buffer.h"
