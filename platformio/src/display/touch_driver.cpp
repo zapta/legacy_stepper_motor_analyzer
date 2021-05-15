@@ -5,7 +5,7 @@
 
 // TODO: check hal errors.
 
-#include <arduino.h>
+#include <Arduino.h>
 
 #include "hal/i2c.h"
 

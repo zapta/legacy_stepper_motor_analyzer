@@ -1,7 +1,7 @@
 // Lookup tables to drive the 16 bits parallel output.
 #pragma once
 
-#include <arduino.h>
+#include <Arduino.h>
 
 namespace bssr_tables {
 

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <arduino.h>
+#include <Arduino.h>
 
 namespace touch_driver {
 extern void test();
