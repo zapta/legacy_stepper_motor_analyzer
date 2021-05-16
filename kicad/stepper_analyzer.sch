@@ -1094,7 +1094,6 @@ SDA
 Text Label 6500 3950 0    50   ~ 0
 TFT_RST
 NoConn ~ 6900 4050
-NoConn ~ 6900 4450
 NoConn ~ 6900 4550
 NoConn ~ 6900 5050
 NoConn ~ 6900 5150
@@ -1322,5 +1321,35 @@ F 2 "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder" H 4850 6550 50  
 F 3 "~" H 4850 6550 50  0001 C CNN
 	1    4850 6550
 	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small_US R_patch
+U 1 1 60A2046F
+P 5750 4450
+F 0 "R_patch" V 5850 4350 50  0000 L CNN
+F 1 "1K to 10K" V 5650 4350 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" H 5750 4450 50  0001 C CNN
+F 3 "~" H 5750 4450 50  0001 C CNN
+	1    5750 4450
+	0    1    1    0   
+$EndComp
+Wire Notes Line
+	6900 4450 5850 4450
+Wire Notes Line
+	5650 4450 5550 4450
+Wire Notes Line
+	5550 4450 5550 4300
+Text Notes 4650 5000 0    50   ~ 0
+ERATA: Solder on the circuit a resistor\nbetween pin 26 of the TFT and\n+3V3D (e.g. pin 8 of U4). Any resistor\nvalue between 1K and 10K should be fine.
+$Comp
+L local:3V3D #PWR?
+U 1 1 60A3822B
+P 5550 4300
+F 0 "#PWR?" H 5550 4150 50  0001 C CNN
+F 1 "3V3D" H 5565 4473 50  0000 C CNN
+F 2 "" H 5550 4300 50  0001 C CNN
+F 3 "" H 5550 4300 50  0001 C CNN
+	1    5550 4300
+	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

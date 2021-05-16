@@ -472,6 +472,10 @@ The electronic schematic, PCB layout, gerber files, and the firmware source file
 
 [BOM](https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/kicad/BOM.csv)
 
+<span style="color:red"><b>
+ERRATA: The current PCB version leaves the RD input on the TFT (pin 26) floating which can  interfere with the operation of the display. One workaround is to patch the board with a resistor to pull the input to +3.3v (but not to +5V!!!). See the errata in the latest schematic for more details.</b></span>
+
+&nbsp;
 
 **Instructions:** Build the PCB, use DFU or SWD protocols to program the released binary into the Blackpill, plugin the TFT screen, power and use. See instructions below on how to flash the firmware release you can find on this github repository.
 
