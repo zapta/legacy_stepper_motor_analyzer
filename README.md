@@ -1,7 +1,7 @@
 # Simple Stepper Motor Analyzer
 
 
-**NOTE: This STM32 based design will be superseded in June 2021 by a newer design that is based on the Raspberry Pi Pico. The new design uses a low profile single PCB form factor (vs the two PCBs of this legacy design) and benefits from the faster CPU and larger RAM/ROM of the Raspberry Pi Pico. The files in this repository will be archived but will stay fully accessible.**
+**NOTE: This is the legacy STM32 which was being replaced by the newer, single board, Raspberry Pi Pico design at https://github.com/zapta/simple_stepper_motor_analyzer.**
 
 &nbsp;
 
