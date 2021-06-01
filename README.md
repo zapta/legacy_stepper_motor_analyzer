@@ -1,11 +1,12 @@
 # Simple Stepper Motor Analyzer
 
 
-**NOTE: This is the legacy STM32 which was being replaced by the newer, single board, Raspberry Pi Pico design at https://github.com/zapta/simple_stepper_motor_analyzer.**
+<span style="color:red"><b>
+NOTE: This is the legacy STM32 based design which was  replaced by the single board, Raspberry Pi Pico design at https://github.com/zapta/simple_stepper_motor_analyzer.</b></span>
 
 &nbsp;
 
-https://github.com/zapta/simple_stepper_motor_analyzer
+https://github.com/zapta/legacy_stepper_motor_analyzer
 
 &nbsp;
 
@@ -52,7 +53,7 @@ THE DESIGN IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 ---
 
 ## Alternative construction option (enclosed case)
-**NOTE:** This pages outlines the open base construction options which is easier and straight forward. For a more involved and potentially more satisfying construction option, which is also featured in the Teaching Tech youtube video, see https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/case_option.md
+**NOTE:** This pages outlines the open base construction options which is easier and straight forward. For a more involved and potentially more satisfying construction option, which is also featured in the Teaching Tech youtube video, see https://github.com/zapta/legacy_stepper_motor_analyzer/blob/master/case_option.md
 
 ![](./www/case_001_small.jpg)
 
@@ -473,7 +474,7 @@ The electronic schematic, PCB layout, gerber files, and the firmware source file
 
 [Schematic](./www/stepper_analyzer-sch.pdf)
 
-[BOM](https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/kicad/BOM.csv)
+[BOM](https://github.com/zapta/legacy_stepper_motor_analyzer/blob/master/kicad/BOM.csv)
 
 <span style="color:red"><b>
 ERRATA: The current PCB version leaves the RD input on the TFT (pin 26) floating which can  interfere with the operation of the display. One workaround is to patch the board with a resistor to pull the input to +3.3v (but not to +5V!!!). See the errata in the latest schematic for more details.</b></span>
@@ -482,7 +483,7 @@ ERRATA: The current PCB version leaves the RD input on the TFT (pin 26) floating
 
 **Instructions:** Build the PCB, use DFU or SWD protocols to program the released binary into the Blackpill, plugin the TFT screen, power and use. See instructions below on how to flash the firmware release you can find on this github repository.
 
-**NOTE:** These instructions are for the simpler  version which uses an open frame base. For ordering parts and building the enclosed version see https://github.com/zapta/simple_stepper_motor_analyzer/blob/master/case_option.md .
+**NOTE:** These instructions are for the simpler  version which uses an open frame base. For ordering parts and building the enclosed version see https://github.com/zapta/legacy_stepper_motor_analyzer/blob/master/case_option.md .
 
 ![](./www/board1.jpg)
 
