@@ -1,4 +1,4 @@
-# Simple Stepper Motor Analyzer
+# Legacy Stepper Motor Analyzer
 
 
 <span style="color:red"><b>
